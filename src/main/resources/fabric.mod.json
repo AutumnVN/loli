@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "ass",
+	"version": "${version}",
+	"name": "AutumnVN's silly stuffs",
+	"description": "My silly fabric mod with a silly name",
+	"authors": [
+		"AutumnVN"
+	],
+	"contact": {
+		"homepage": "https://chino.is-a.dev/",
+		"sources": "https://github.com/AutumnVN/ass"
+	},
+	"license": "MIT",
+	"icon": "assets/ass/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"autumnvn.ass.ASS"
+		]
+	},
+	"mixins": [
+		"ass.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.21",
+		"minecraft": "~1.20",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}
