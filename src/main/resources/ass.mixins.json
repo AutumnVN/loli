@@ -6,7 +6,8 @@
 		"ChatHudMixin",
 		"EntityRendererMixin",
 		"IngameHudMixin",
-		"LightmapTextureManagerMixin"
+		"LightmapTextureManagerMixin",
+		"PlayerListHudMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
