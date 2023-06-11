@@ -5,6 +5,7 @@
 	"mixins": [
 		"ChatHudMixin",
 		"EntityRendererMixin",
+		"IngameHudMixin",
 		"LightmapTextureManagerMixin"
 	],
 	"injectors": {
