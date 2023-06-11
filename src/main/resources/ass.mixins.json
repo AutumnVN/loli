@@ -3,7 +3,8 @@
 	"package": "autumnvn.ass.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"EntityRendererMixin"
+		"EntityRendererMixin",
+		"LightmapTextureManagerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
