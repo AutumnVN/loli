@@ -4,7 +4,9 @@
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
 		"ChatHudMixin",
+		"ClientPlayerEntityMixin",
 		"ClientPlayerInteractionManagerMixin",
+		"ClientPlayNetworkHandlerMixin",
 		"EntityRendererMixin",
 		"IngameHudMixin",
 		"LightmapTextureManagerMixin",
