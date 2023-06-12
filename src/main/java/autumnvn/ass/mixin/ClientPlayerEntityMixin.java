@@ -17,9 +17,10 @@ public class ClientPlayerEntityMixin {
         if (ASS.died) {
             ASS.died = false;
             MinecraftClient client = MinecraftClient.getInstance();
-            String message = "§6You died at §f" + ASS.deathX + " / " + ASS.deathY + " / " + ASS.deathZ + " §6in §f"
-                    + ASS.deathWorld;
-            client.inGameHud.getChatHud().addMessage(Text.of(message));
+            client.player.sendMessage(
+                    Text.literal("§6You died at §f" + ASS.deathX + " / " + ASS.deathY + " / " + ASS.deathZ + " §6in §f"
+                            + ASS.deathWorld),
+                    false);
         }
     }
 }

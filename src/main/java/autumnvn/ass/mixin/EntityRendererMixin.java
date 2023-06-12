@@ -5,6 +5,7 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -14,6 +15,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import autumnvn.ass.ASS;
 
 @Mixin(EntityRenderer.class)
 public abstract class EntityRendererMixin<T extends Entity> {
@@ -27,11 +30,11 @@ public abstract class EntityRendererMixin<T extends Entity> {
 	@Inject(method = "render", at = @At("HEAD"))
 	private void onRender(T entity, float yaw, float tickDelta, MatrixStack matrices,
 			VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-		if (entity instanceof PlayerEntity) {
-			String playerName = entity.getName().getString();
+		if (entity instanceof PlayerEntity || (entity instanceof LivingEntity && ASS.mobHealth)) {
+			String entityName = entity.getName().getString();
 			int health = (int) Math.ceil(getHealth(entity));
-			playerName += "  " + getHealthColor(health) + health + Formatting.RED + " ❤";
-			this.renderLabelIfPresent(entity, Text.of(playerName), matrices, vertexConsumers, light);
+			entityName += "  " + getHealthColor(health) + health + Formatting.RED + " ❤";
+			this.renderLabelIfPresent(entity, Text.of(entityName), matrices, vertexConsumers, light);
 		}
 	}
 
