@@ -8,6 +8,7 @@
 		"ClientPlayerInteractionManagerMixin",
 		"ClientPlayNetworkHandlerMixin",
 		"EntityRendererMixin",
+		"GameRendererMixin",
 		"IngameHudMixin",
 		"LightmapTextureManagerMixin",
 		"MinecraftClientMixin",

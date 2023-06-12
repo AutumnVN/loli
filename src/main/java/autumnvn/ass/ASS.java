@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.WitherEntity;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 public class ASS implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("ass");
+	public static MinecraftClient client = MinecraftClient.getInstance();
 	public static boolean died = false;
 	public static int deathX = 0;
 	public static int deathY = 0;
@@ -26,6 +28,9 @@ public class ASS implements ModInitializer {
 	public static String deathWorld = "";
 	public static boolean mobHealth = false;
 	public static boolean triggerBot = false;
+	public static KeyBinding zoomKey;
+	private static SimpleOption<Double> mouseSens;
+	private static double defaultMouseSens;
 
 	@Override
 	public void onInitialize() {
@@ -35,6 +40,8 @@ public class ASS implements ModInitializer {
 				new KeyBinding("ass.mobHealth", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_H, "AutumnVN's silly stuffs"));
 		KeyBinding triggerBotKey = KeyBindingHelper.registerKeyBinding(
 				new KeyBinding("ass.triggerBot", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_R, "AutumnVN's silly stuffs"));
+		zoomKey = KeyBindingHelper.registerKeyBinding(
+				new KeyBinding("ass.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "AutumnVN's silly stuffs"));
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (chatCoordsKey.wasPressed()) {
@@ -59,7 +66,6 @@ public class ASS implements ModInitializer {
 		});
 
 		ClientTickEvents.START_WORLD_TICK.register(clientWorld -> {
-			MinecraftClient client = MinecraftClient.getInstance();
 			if (triggerBot && client.crosshairTarget != null && client.crosshairTarget.getType() == Type.ENTITY
 					&& client.player.getAttackCooldownProgress(0.0f) >= 1.0f) {
 				if (((EntityHitResult) client.crosshairTarget).getEntity() instanceof LivingEntity) {
@@ -74,5 +80,20 @@ public class ASS implements ModInitializer {
 				}
 			}
 		});
+	}
+
+	public static double zoomFov(double fov) {
+		mouseSens = client.options.getMouseSensitivity();
+		if (!zoomKey.isPressed()) {
+			if (defaultMouseSens != 0) {
+				mouseSens.setValue(defaultMouseSens);
+				defaultMouseSens = 0;
+			}
+			return fov;
+		}
+		if (defaultMouseSens == 0)
+			defaultMouseSens = mouseSens.getValue();
+		mouseSens.setValue(defaultMouseSens / 4);
+		return fov / 4;
 	}
 }
