@@ -28,13 +28,15 @@ public abstract class EntityRendererMixin<T extends Entity> {
 	protected abstract void renderLabelIfPresent(T entity, Text text, MatrixStack matrices,
 			VertexConsumerProvider vertexConsumers, int light);
 
-	@Inject(method = "render", at = @At("HEAD"))
+	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
 	private void onRender(T entity, float yaw, float tickDelta, MatrixStack matrices,
 			VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
 		if (entity instanceof PlayerEntity || (entity instanceof LivingEntity && ASS.mobHealth)) {
 			String entityName = entity.getName().getString();
 			int health = (int) Math.ceil(getHealth(entity));
 			entityName += "  " + getHealthColor(health) + health + Formatting.RED + " ❤";
+			if (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())
+				entityName += Formatting.RESET + " [C]";
 			if (entity instanceof HorseEntity && ASS.mobHealth) {
 				double speed = ((HorseEntity) entity).getAttributes()
 						.getValue(EntityAttributes.GENERIC_MOVEMENT_SPEED) * 42.157787584D;
@@ -46,6 +48,7 @@ public abstract class EntityRendererMixin<T extends Entity> {
 						+ String.format("%.1f", jumpHeight) + " ⬆";
 			}
 			this.renderLabelIfPresent(entity, Text.of(entityName), matrices, vertexConsumers, light);
+			ci.cancel();
 		}
 	}
 

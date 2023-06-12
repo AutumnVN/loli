@@ -30,7 +30,7 @@ public class ASS implements ModInitializer {
 			while (mobHealthKeybind.wasPressed()) {
 				mobHealth = !mobHealth;
 				client.player.sendMessage(
-						Text.literal(mobHealth ? "§aMobHealth is enabled" : "§cMobHealth is disabled"), false);
+						Text.literal(mobHealth ? "§aMobHealth is enabled" : "§cMobHealth is disabled"), true);
 			}
 		});
 	}
