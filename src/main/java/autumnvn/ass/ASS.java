@@ -13,12 +13,12 @@ import org.slf4j.LoggerFactory;
 
 public class ASS implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("ass");
-	public static Boolean died = false;
+	public static boolean died = false;
 	public static int deathX = 0;
 	public static int deathY = 0;
 	public static int deathZ = 0;
 	public static String deathWorld = "";
-	public static Boolean mobHealth = false;
+	public static boolean mobHealth = false;
 	private static KeyBinding mobHealthKeybind;
 
 	@Override

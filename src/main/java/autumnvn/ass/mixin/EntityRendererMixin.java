@@ -5,6 +5,7 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -34,6 +35,16 @@ public abstract class EntityRendererMixin<T extends Entity> {
 			String entityName = entity.getName().getString();
 			int health = (int) Math.ceil(getHealth(entity));
 			entityName += "  " + getHealthColor(health) + health + Formatting.RED + " ❤";
+			if (entity instanceof HorseEntity && ASS.mobHealth) {
+				double speed = ((HorseEntity) entity).getAttributes()
+						.getValue(EntityAttributes.GENERIC_MOVEMENT_SPEED) * 42.157787584D;
+				double jumpStrength = ((HorseEntity) entity).getJumpStrength();
+				double jumpHeight = -0.1817584952D * jumpStrength * jumpStrength * jumpStrength
+						+ 3.689713992D * jumpStrength * jumpStrength + 2.128599134D * jumpStrength - 0.343930367D;
+				entityName += "  " + getHorseColor(4.742751103D, 14.228253309D, speed) + String.format("%.1f", speed)
+						+ " ➡" + "  " + getHorseColor(1.08623D, 5.29262D, jumpHeight)
+						+ String.format("%.1f", jumpHeight) + " ⬆";
+			}
 			this.renderLabelIfPresent(entity, Text.of(entityName), matrices, vertexConsumers, light);
 		}
 	}
@@ -52,5 +63,15 @@ public abstract class EntityRendererMixin<T extends Entity> {
 		if (health <= 20)
 			return Formatting.GREEN;
 		return Formatting.DARK_GREEN;
+	}
+
+	private Formatting getHorseColor(double min, double max, double value) {
+		double third = (max - min) / 3.0D;
+		if (value + 2 * third < max)
+			return Formatting.RED;
+		if (value + third < max)
+			return Formatting.GOLD;
+		return Formatting.GREEN;
+
 	}
 }
