@@ -7,12 +7,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import autumnvn.ass.ASS;
+import autumnvn.ass.command.TPS;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.toast.Toast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.s2c.play.DeathMessageS2CPacket;
+import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public class ClientPlayNetworkHandlerMixin {
@@ -31,6 +33,11 @@ public class ClientPlayNetworkHandlerMixin {
 
     @Redirect(method = "onServerMetadata(Lnet/minecraft/network/packet/s2c/play/ServerMetadataS2CPacket;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/toast/ToastManager;add(Lnet/minecraft/client/toast/Toast;)V"))
     private void noInsecureChatToast(final ToastManager instance, final Toast toast) {
+    }
+
+    @Inject(method = "onWorldTimeUpdate", at = @At("HEAD"))
+    private void axolotlclient$onWorldUpdate(WorldTimeUpdateS2CPacket packet, CallbackInfo ci) {
+        TPS.updateTime(packet.getTime());
     }
 
 }

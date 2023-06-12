@@ -1,6 +1,12 @@
 package autumnvn.ass;
 
+import org.lwjgl.glfw.GLFW;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import autumnvn.ass.command.TPS;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
@@ -13,10 +19,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult.Type;
-
-import org.lwjgl.glfw.GLFW;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ASS implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("ass");
@@ -35,7 +37,7 @@ public class ASS implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		KeyBinding chatCoordsKey = KeyBindingHelper.registerKeyBinding(
-				new KeyBinding("ass.chatCoords", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_Y, "AutumnVN's silly stuffs"));
+				new KeyBinding("ass.chatCoords", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, "AutumnVN's silly stuffs"));
 		KeyBinding mobHealthKey = KeyBindingHelper.registerKeyBinding(
 				new KeyBinding("ass.mobHealth", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_H, "AutumnVN's silly stuffs"));
 		KeyBinding triggerBotKey = KeyBindingHelper.registerKeyBinding(
@@ -51,7 +53,8 @@ public class ASS implements ModInitializer {
 				String world = client.world.getRegistryKey().getValue().toString().split(":")[1];
 				int health = (int) client.player.getHealth();
 				client.player.networkHandler
-						.sendChatMessage(String.format("%d / %d / %d in %s | %d ❤", x, y, z, world, health));
+						.sendChatMessage(
+								String.format("%d / %d / %d in %s | %d ❤ | %.2f TPS", x, y, z, world, health, TPS.tps));
 			}
 			while (mobHealthKey.wasPressed()) {
 				mobHealth = !mobHealth;
@@ -79,6 +82,10 @@ public class ASS implements ModInitializer {
 					}
 				}
 			}
+		});
+
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+			TPS.register(dispatcher);
 		});
 	}
 
