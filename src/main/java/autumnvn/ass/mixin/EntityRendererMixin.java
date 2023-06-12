@@ -4,9 +4,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import autumnvn.ass.ASS;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -50,6 +53,12 @@ public abstract class EntityRendererMixin<T extends Entity> {
 			this.renderLabelIfPresent(entity, Text.of(entityName), matrices, vertexConsumers, light);
 			ci.cancel();
 		}
+	}
+
+	@ModifyArgs(method = "renderLabelIfPresent", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;draw(Lnet/minecraft/text/Text;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)I"))
+	private void modify(Args args) {
+		args.set(3, 0xFFFFFFFF);
+		args.set(7, TextRenderer.TextLayerType.SEE_THROUGH);
 	}
 
 	private float getHealth(T entity) {
