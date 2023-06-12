@@ -1,17 +1,28 @@
 package autumnvn.ass.mixin;
 
+import java.util.Collection;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import com.google.common.collect.Ordering;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.JumpingMount;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.util.math.MathHelper;
 
 @Mixin(InGameHud.class)
 public class IngameHudMixin {
@@ -62,5 +73,58 @@ public class IngameHudMixin {
                 || player.getMountJumpStrength() > 0)
             return player.getJumpingMount();
         return null;
+    }
+
+    @Inject(method = "renderStatusEffectOverlay", at = @At("TAIL"))
+    private void renderDurationOverlay(DrawContext drawContext, CallbackInfo ci) {
+        Collection<StatusEffectInstance> collection = this.client.player.getStatusEffects();
+        if (!collection.isEmpty()) {
+            int beneficialCount = 0;
+            int nonBeneficialCount = 0;
+            for (StatusEffectInstance statusEffectInstance : Ordering.natural().reverse().sortedCopy(collection)) {
+                StatusEffect statusEffect = statusEffectInstance.getEffectType();
+                if (statusEffectInstance.shouldShowIcon()) {
+                    int x = this.client.getWindow().getScaledWidth();
+                    int y = 1;
+                    if (this.client.isDemo()) {
+                        y += 15;
+                    }
+                    if (statusEffect.isBeneficial()) {
+                        beneficialCount++;
+                        x -= 25 * beneficialCount;
+                    } else {
+                        nonBeneficialCount++;
+                        x -= 25 * nonBeneficialCount;
+                        y += 26;
+                    }
+                    String duration = getDurationAsString(statusEffectInstance);
+                    if (statusEffectInstance.isInfinite()) {
+                        duration = "∞";
+                    }
+                    int durationLength = client.textRenderer.getWidth(duration);
+                    drawContext.drawTextWithShadow(client.textRenderer, duration, x + 13 - (durationLength / 2), y + 14,
+                            0xFFFFFFFF);
+                    int amplifier = statusEffectInstance.getAmplifier();
+                    if (amplifier > 0) {
+                        String amplifierString = (amplifier < 6) ? I18n.translate("potion.potency." + amplifier) : "**";
+                        int amplifierLength = client.textRenderer.getWidth(amplifierString);
+                        drawContext.drawTextWithShadow(client.textRenderer, amplifierString, x + 22 - amplifierLength,
+                                y + 3, 0xFFFFFFFF);
+                    }
+                }
+            }
+        }
+    }
+
+    private String getDurationAsString(StatusEffectInstance statusEffectInstance) {
+        int ticks = MathHelper.floor((float) statusEffectInstance.getDuration());
+        int seconds = ticks / 20;
+        if (ticks > 32147)
+            return "**";
+        if (seconds > 60 & seconds < 600)
+            return seconds / 60 + ":" + seconds % 60;
+        if (seconds > 600)
+            return seconds / 60 + "m";
+        return String.valueOf(seconds);
     }
 }
