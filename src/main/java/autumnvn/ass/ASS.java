@@ -15,6 +15,18 @@ import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.WitherEntity;
+import net.minecraft.entity.passive.ChickenEntity;
+import net.minecraft.entity.passive.CowEntity;
+import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.entity.passive.PolarBearEntity;
+import net.minecraft.entity.passive.PufferfishEntity;
+import net.minecraft.entity.passive.RabbitEntity;
+import net.minecraft.entity.passive.SchoolingFishEntity;
+import net.minecraft.entity.passive.SheepEntity;
+import net.minecraft.entity.passive.SquidEntity;
+import net.minecraft.entity.passive.TraderLlamaEntity;
+import net.minecraft.entity.passive.WanderingTraderEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
@@ -77,8 +89,16 @@ public class ASS implements ModInitializer {
 					if (livingEntity.isAttackable()
 							&& (livingEntity.hurtTime == 0 || livingEntity instanceof WitherEntity)
 							&& livingEntity.isAlive()) {
-						client.interactionManager.attackEntity(client.player, livingEntity);
-						client.player.swingHand(Hand.MAIN_HAND);
+						if (!(livingEntity instanceof PassiveEntity && !(livingEntity instanceof ChickenEntity
+								|| livingEntity instanceof CowEntity || livingEntity instanceof PigEntity
+								|| livingEntity instanceof PolarBearEntity || livingEntity instanceof PufferfishEntity
+								|| livingEntity instanceof RabbitEntity || livingEntity instanceof SchoolingFishEntity
+								|| livingEntity instanceof SheepEntity || livingEntity instanceof SquidEntity
+								|| livingEntity instanceof TraderLlamaEntity
+								|| livingEntity instanceof WanderingTraderEntity))) {
+							client.interactionManager.attackEntity(client.player, livingEntity);
+							client.player.swingHand(Hand.MAIN_HAND);
+						}
 					}
 				}
 			}
