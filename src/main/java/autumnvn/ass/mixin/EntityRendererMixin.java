@@ -43,9 +43,10 @@ public abstract class EntityRendererMixin<T extends Entity> {
 				double jumpStrength = ((HorseEntity) entity).getJumpStrength();
 				double jumpHeight = -0.1817584952D * jumpStrength * jumpStrength * jumpStrength
 						+ 3.689713992D * jumpStrength * jumpStrength + 2.128599134D * jumpStrength - 0.343930367D;
-				entityName += "  " + getHorseColor(4.742751103D, 14.228253309D, speed) + String.format("%.1f", speed)
-						+ " ➡" + "  " + getHorseColor(1.08623D, 5.29262D, jumpHeight)
-						+ String.format("%.1f", jumpHeight) + " ⬆";
+				entityName += getHorseColor(4.742751103D, 14.228253309D, speed)
+						+ String.format("  %.1f ➡", speed)
+						+ getHorseColor(1.08623D, 5.29262D, jumpHeight)
+						+ String.format("  %.1f ⬆", jumpHeight);
 			}
 			this.renderLabelIfPresent(entity, Text.of(entityName), matrices, vertexConsumers, light);
 			ci.cancel();

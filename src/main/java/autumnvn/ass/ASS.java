@@ -25,18 +25,27 @@ public class ASS implements ModInitializer {
 	public static int deathZ = 0;
 	public static String deathWorld = "";
 	public static boolean mobHealth = false;
-	// private static KeyBinding mobHealthKey;
 	public static boolean triggerBot = false;
-	// private static KeyBinding triggerBotKey;
 
 	@Override
 	public void onInitialize() {
+		KeyBinding chatCoordsKey = KeyBindingHelper.registerKeyBinding(
+				new KeyBinding("ass.chatCoords", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_Y, "AutumnVN's silly stuffs"));
 		KeyBinding mobHealthKey = KeyBindingHelper.registerKeyBinding(
 				new KeyBinding("ass.mobHealth", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_H, "AutumnVN's silly stuffs"));
 		KeyBinding triggerBotKey = KeyBindingHelper.registerKeyBinding(
 				new KeyBinding("ass.triggerBot", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_R, "AutumnVN's silly stuffs"));
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			while (chatCoordsKey.wasPressed()) {
+				int x = (int) client.player.getX();
+				int y = (int) client.player.getY();
+				int z = (int) client.player.getZ();
+				String world = client.world.getRegistryKey().getValue().toString().split(":")[1];
+				int health = (int) client.player.getHealth();
+				client.player.networkHandler
+						.sendChatMessage(String.format("%d / %d / %d in %s | %d ❤", x, y, z, world, health));
+			}
 			while (mobHealthKey.wasPressed()) {
 				mobHealth = !mobHealth;
 				client.player.sendMessage(
