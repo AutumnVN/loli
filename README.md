@@ -42,6 +42,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Always show food bar when riding and experience bar when not jumping
 
+- NoBlindness
+
+    - Remove Blindness and Darkness effects
+
 - NoDelayUse
 
     - Remove 4 ticks delay when using items

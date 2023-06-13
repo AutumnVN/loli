@@ -25,6 +25,7 @@ import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.WitherEntity;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.passive.PassiveEntity;
@@ -76,59 +77,6 @@ public class ASS implements ModInitializer {
 		zoomKey = KeyBindingHelper.registerKeyBinding(
 				new KeyBinding("ass.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "AutumnVN's silly stuffs"));
 
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			while (chatCoordsKey.wasPressed()) {
-				int x = (int) client.player.getX();
-				int y = (int) client.player.getY();
-				int z = (int) client.player.getZ();
-				String world = client.world.getRegistryKey().getValue().toString().split(":")[1];
-				int health = (int) client.player.getHealth();
-				client.player.networkHandler
-						.sendChatMessage(
-								String.format("%d / %d / %d in %s | %d ❤ | %.2f TPS", x, y, z, world, health, TPS.tps));
-			}
-
-			while (mobHealthKey.wasPressed()) {
-				mobHealth = !mobHealth;
-				client.player.sendMessage(
-						Text.literal(mobHealth ? "§aMobHealth is enabled" : "§cMobHealth is disabled"), true);
-			}
-
-			while (triggerBotKey.wasPressed()) {
-				triggerBot = !triggerBot;
-				client.player.sendMessage(
-						Text.literal(triggerBot ? "§aTriggerBot is enabled" : "§cTriggerBot is disabled"), true);
-			}
-		});
-
-		ClientTickEvents.START_WORLD_TICK.register(clientWorld -> {
-			if (triggerBot && client.crosshairTarget != null && client.crosshairTarget.getType() == Type.ENTITY
-					&& client.player.getAttackCooldownProgress(0.0f) >= 1.0f) {
-				if (((EntityHitResult) client.crosshairTarget).getEntity() instanceof LivingEntity) {
-					LivingEntity livingEntity = (LivingEntity) ((EntityHitResult) client.crosshairTarget).getEntity();
-
-					if (livingEntity.isAttackable()
-							&& (livingEntity.hurtTime == 0 || livingEntity instanceof WitherEntity)
-							&& livingEntity.isAlive()) {
-						if (!(livingEntity instanceof PassiveEntity && !(livingEntity instanceof ChickenEntity
-								|| livingEntity instanceof CowEntity || livingEntity instanceof PigEntity
-								|| livingEntity instanceof PolarBearEntity || livingEntity instanceof PufferfishEntity
-								|| livingEntity instanceof RabbitEntity || livingEntity instanceof SchoolingFishEntity
-								|| livingEntity instanceof SheepEntity || livingEntity instanceof SquidEntity
-								|| livingEntity instanceof TraderLlamaEntity
-								|| livingEntity instanceof WanderingTraderEntity))) {
-							client.interactionManager.attackEntity(client.player, livingEntity);
-							client.player.swingHand(Hand.MAIN_HAND);
-						}
-					}
-				}
-			}
-		});
-
-		ClientCommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-			TPS.register(dispatcher);
-		});
-
 		Builder builder = new RichPresence.Builder().setTimestamps(System.currentTimeMillis() / 1000, null);
 		DiscordRPCClient discordClient = new DiscordRPCClient(new EventListener() {
 			@Override
@@ -168,7 +116,30 @@ public class ASS implements ModInitializer {
 			}
 		}, "Discord RPC update thread").start();
 
-		ClientTickEvents.END_CLIENT_TICK.register((client) -> {
+		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			while (chatCoordsKey.wasPressed()) {
+				int x = (int) client.player.getX();
+				int y = (int) client.player.getY();
+				int z = (int) client.player.getZ();
+				String world = client.world.getRegistryKey().getValue().toString().split(":")[1];
+				int health = (int) client.player.getHealth();
+				client.player.networkHandler
+						.sendChatMessage(
+								String.format("%d / %d / %d in %s | %d ❤ | %.2f TPS", x, y, z, world, health, TPS.tps));
+			}
+
+			while (mobHealthKey.wasPressed()) {
+				mobHealth = !mobHealth;
+				client.player.sendMessage(
+						Text.literal(mobHealth ? "§aMobHealth is enabled" : "§cMobHealth is disabled"), true);
+			}
+
+			while (triggerBotKey.wasPressed()) {
+				triggerBot = !triggerBot;
+				client.player.sendMessage(
+						Text.literal(triggerBot ? "§aTriggerBot is enabled" : "§cTriggerBot is disabled"), true);
+			}
+
 			if (++rpcTickTimer % 100 == 0) {
 				rpcTickTimer = 0;
 
@@ -207,6 +178,41 @@ public class ASS implements ModInitializer {
 								client.getSession().getUsername(), client.getGameVersion()),
 						null, null);
 			}
+
+			if (client.player != null) {
+				if (client.player.hasStatusEffect(StatusEffects.BLINDNESS))
+					client.player.removeStatusEffect(StatusEffects.BLINDNESS);
+				if (client.player.hasStatusEffect(StatusEffects.DARKNESS))
+					client.player.removeStatusEffect(StatusEffects.DARKNESS);
+			}
+		});
+
+		ClientTickEvents.START_WORLD_TICK.register(clientWorld -> {
+			if (triggerBot && client.crosshairTarget != null && client.crosshairTarget.getType() == Type.ENTITY
+					&& client.player.getAttackCooldownProgress(0.0f) >= 1.0f) {
+				if (((EntityHitResult) client.crosshairTarget).getEntity() instanceof LivingEntity) {
+					LivingEntity livingEntity = (LivingEntity) ((EntityHitResult) client.crosshairTarget).getEntity();
+
+					if (livingEntity.isAttackable()
+							&& (livingEntity.hurtTime == 0 || livingEntity instanceof WitherEntity)
+							&& livingEntity.isAlive()) {
+						if (!(livingEntity instanceof PassiveEntity && !(livingEntity instanceof ChickenEntity
+								|| livingEntity instanceof CowEntity || livingEntity instanceof PigEntity
+								|| livingEntity instanceof PolarBearEntity || livingEntity instanceof PufferfishEntity
+								|| livingEntity instanceof RabbitEntity || livingEntity instanceof SchoolingFishEntity
+								|| livingEntity instanceof SheepEntity || livingEntity instanceof SquidEntity
+								|| livingEntity instanceof TraderLlamaEntity
+								|| livingEntity instanceof WanderingTraderEntity))) {
+							client.interactionManager.attackEntity(client.player, livingEntity);
+							client.player.swingHand(Hand.MAIN_HAND);
+						}
+					}
+				}
+			}
+		});
+
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+			TPS.register(dispatcher);
 		});
 	}
 

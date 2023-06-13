@@ -12,7 +12,7 @@ import net.minecraft.client.render.GameRenderer;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
-    @Inject(at = @At(value = "RETURN", ordinal = 1), method = "getFov(Lnet/minecraft/client/render/Camera;FZ)D", cancellable = true)
+    @Inject(method = "getFov(Lnet/minecraft/client/render/Camera;FZ)D", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
     private void onGetFov(Camera camera, float tickDelta, boolean changingFov, CallbackInfoReturnable<Double> cir) {
         cir.setReturnValue(ASS.zoomFov(cir.getReturnValueD()));
     }
