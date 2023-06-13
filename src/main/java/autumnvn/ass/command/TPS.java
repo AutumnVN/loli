@@ -25,8 +25,10 @@ public class TPS {
     private static Formatting getTpsColor(double tps) {
         if (tps > 18)
             return Formatting.GREEN;
+
         if (tps > 16)
             return Formatting.YELLOW;
+
         return Formatting.RED;
     }
 
@@ -36,13 +38,16 @@ public class TPS {
             lastUpdate = System.nanoTime();
             return;
         }
+
         long time = System.nanoTime();
         double elapsedMilli = (time - lastUpdate) / 1000000d;
         int passedTicks = (int) (ticks - lastTick);
+
         if (passedTicks > 0) {
             double mspt = elapsedMilli / passedTicks;
             tps = Math.min(1000 / mspt, 20);
         }
+
         lastTick = ticks;
         lastUpdate = time;
     }

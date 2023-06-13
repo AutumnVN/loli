@@ -3,6 +3,7 @@ package autumnvn.ass.mixin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import autumnvn.ass.ASS;
@@ -14,5 +15,10 @@ public class GameRendererMixin {
     @Inject(at = @At(value = "RETURN", ordinal = 1), method = "getFov(Lnet/minecraft/client/render/Camera;FZ)D", cancellable = true)
     private void onGetFov(Camera camera, float tickDelta, boolean changingFov, CallbackInfoReturnable<Double> cir) {
         cir.setReturnValue(ASS.zoomFov(cir.getReturnValueD()));
+    }
+
+    @Inject(method = "render", at = @At("TAIL"))
+    private void render(float f, long l, boolean bl, CallbackInfo ci) {
+        ASS.updateScreen();
     }
 }

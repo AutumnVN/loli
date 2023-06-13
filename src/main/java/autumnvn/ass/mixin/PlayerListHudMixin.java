@@ -30,8 +30,10 @@ public class PlayerListHudMixin {
     private int getPingColor(int ping) {
         if (ping > 300)
             return 0xff5252;
+
         if (ping > 150)
             return 0xffba52;
+
         return 0x66ff88;
     }
 }

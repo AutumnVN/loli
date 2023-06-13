@@ -72,6 +72,7 @@ public class IngameHudMixin {
         if (!client.interactionManager.hasExperienceBar() || client.options.jumpKey.isPressed()
                 || player.getMountJumpStrength() > 0)
             return player.getJumpingMount();
+
         return null;
     }
 
@@ -81,14 +82,17 @@ public class IngameHudMixin {
         if (!collection.isEmpty()) {
             int beneficialCount = 0;
             int nonBeneficialCount = 0;
+
             for (StatusEffectInstance statusEffectInstance : Ordering.natural().reverse().sortedCopy(collection)) {
                 StatusEffect statusEffect = statusEffectInstance.getEffectType();
+
                 if (statusEffectInstance.shouldShowIcon()) {
                     int x = this.client.getWindow().getScaledWidth();
                     int y = 1;
-                    if (this.client.isDemo()) {
+
+                    if (this.client.isDemo())
                         y += 15;
-                    }
+
                     if (statusEffect.isBeneficial()) {
                         beneficialCount++;
                         x -= 25 * beneficialCount;
@@ -97,14 +101,17 @@ public class IngameHudMixin {
                         x -= 25 * nonBeneficialCount;
                         y += 26;
                     }
+
                     String duration = getDurationAsString(statusEffectInstance);
-                    if (statusEffectInstance.isInfinite()) {
+
+                    if (statusEffectInstance.isInfinite())
                         duration = "∞";
-                    }
+
                     int durationLength = client.textRenderer.getWidth(duration);
                     drawContext.drawTextWithShadow(client.textRenderer, duration, x + 13 - (durationLength / 2), y + 14,
                             0xFFFFFFFF);
                     int amplifier = statusEffectInstance.getAmplifier();
+
                     if (amplifier > 0) {
                         String amplifierString = (amplifier < 6) ? I18n.translate("potion.potency." + amplifier) : "**";
                         int amplifierLength = client.textRenderer.getWidth(amplifierString);
@@ -119,12 +126,16 @@ public class IngameHudMixin {
     private String getDurationAsString(StatusEffectInstance statusEffectInstance) {
         int ticks = MathHelper.floor((float) statusEffectInstance.getDuration());
         int seconds = ticks / 20;
+
         if (ticks > 32147)
             return "**";
+
         if (seconds > 60 & seconds < 600)
             return seconds / 60 + ":" + seconds % 60;
+
         if (seconds > 600)
             return seconds / 60 + "m";
+
         return String.valueOf(seconds);
     }
 }

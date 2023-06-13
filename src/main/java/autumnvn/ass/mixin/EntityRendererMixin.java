@@ -37,8 +37,10 @@ public abstract class EntityRendererMixin<T extends Entity> {
 			String entityName = entity.getName().getString();
 			int health = (int) Math.ceil(getHealth(entity));
 			entityName += "  " + getHealthColor(health) + health + Formatting.RED + " ❤";
+
 			if (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())
 				entityName += Formatting.RESET + " [C]";
+
 			if (entity instanceof HorseEntity && ASS.mobHealth) {
 				double speed = ((HorseEntity) entity).getAttributes()
 						.getValue(EntityAttributes.GENERIC_MOVEMENT_SPEED) * 42.157787584D;
@@ -50,6 +52,7 @@ public abstract class EntityRendererMixin<T extends Entity> {
 						+ getHorseColor(1.08623D, 5.29262D, jumpHeight)
 						+ String.format("  %.1f ⬆", jumpHeight);
 			}
+
 			this.renderLabelIfPresent(entity, Text.of(entityName), matrices, vertexConsumers, light);
 			ci.cancel();
 		}
@@ -68,12 +71,16 @@ public abstract class EntityRendererMixin<T extends Entity> {
 	private Formatting getHealthColor(int health) {
 		if (health <= 5)
 			return Formatting.RED;
+
 		if (health <= 10)
 			return Formatting.GOLD;
+
 		if (health <= 15)
 			return Formatting.YELLOW;
+
 		if (health <= 20)
 			return Formatting.GREEN;
+
 		return Formatting.DARK_GREEN;
 	}
 
@@ -81,8 +88,10 @@ public abstract class EntityRendererMixin<T extends Entity> {
 		double third = (max - min) / 3.0D;
 		if (value + 2 * third < max)
 			return Formatting.RED;
+
 		if (value + third < max)
 			return Formatting.GOLD;
+
 		return Formatting.GREEN;
 
 	}

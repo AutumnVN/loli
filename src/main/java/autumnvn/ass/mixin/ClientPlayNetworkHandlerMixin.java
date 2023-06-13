@@ -22,6 +22,7 @@ public class ClientPlayNetworkHandlerMixin {
     private void onDeathMessage(DeathMessageS2CPacket packet, CallbackInfo ci) {
         MinecraftClient client = MinecraftClient.getInstance();
         Entity entity = client.world.getEntityById(packet.getEntityId());
+
         if (entity == client.player) {
             ASS.deathX = (int) client.player.getX();
             ASS.deathY = (int) client.player.getY();

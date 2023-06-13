@@ -1,6 +1,5 @@
 package autumnvn.ass.mixin;
 
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,16 +29,15 @@ public abstract class MinecraftClientMixin {
     private TutorialManager tutorialManager;
 
     @Shadow
-    public abstract void setScreen(@Nullable Screen screen);
+    public abstract void setScreen(Screen screen);
 
     @Shadow
-    @Nullable
     private ClientPlayerEntity player;
 
     @Redirect(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "net/minecraft/client/network/ClientPlayerEntity.openRidingInventory ()V"))
     private void playerInventoryAccess(ClientPlayerEntity instance) {
-        assert this.player != null;
         MinecraftClient client = MinecraftClient.getInstance();
+
         if (client.options.sprintKey.isPressed()) {
             tutorialManager.onInventoryOpened();
             setScreen(new InventoryScreen(this.player));

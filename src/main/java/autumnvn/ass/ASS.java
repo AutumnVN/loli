@@ -5,11 +5,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import autumnvn.ass.command.TPS;
+import club.bottomservices.discordrpc.lib.DiscordRPCClient;
+import club.bottomservices.discordrpc.lib.EventListener;
+import club.bottomservices.discordrpc.lib.RichPresence;
+import club.bottomservices.discordrpc.lib.RichPresence.Builder;
+import club.bottomservices.discordrpc.lib.User;
+import club.bottomservices.discordrpc.lib.exceptions.NoDiscordException;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ConnectScreen;
+import net.minecraft.client.gui.screen.DisconnectedScreen;
+import net.minecraft.client.gui.screen.LevelLoadingScreen;
+import net.minecraft.client.gui.screen.ProgressScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.util.InputUtil;
@@ -35,16 +45,25 @@ import net.minecraft.util.hit.HitResult.Type;
 public class ASS implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("ass");
 	public static MinecraftClient client = MinecraftClient.getInstance();
+
 	public static boolean died = false;
 	public static int deathX = 0;
 	public static int deathY = 0;
 	public static int deathZ = 0;
 	public static String deathWorld = "";
+
 	public static boolean mobHealth = false;
 	public static boolean triggerBot = false;
+
 	public static KeyBinding zoomKey;
 	private static SimpleOption<Double> mouseSens;
 	private static double defaultMouseSens;
+
+	private byte rpcTickTimer = 0;
+	private static String largeImage = "chino";
+	private static String details = null;
+	private static String state = null;
+	private static String gameState = "mainmenu";
 
 	@Override
 	public void onInitialize() {
@@ -68,11 +87,13 @@ public class ASS implements ModInitializer {
 						.sendChatMessage(
 								String.format("%d / %d / %d in %s | %d ❤ | %.2f TPS", x, y, z, world, health, TPS.tps));
 			}
+
 			while (mobHealthKey.wasPressed()) {
 				mobHealth = !mobHealth;
 				client.player.sendMessage(
 						Text.literal(mobHealth ? "§aMobHealth is enabled" : "§cMobHealth is disabled"), true);
 			}
+
 			while (triggerBotKey.wasPressed()) {
 				triggerBot = !triggerBot;
 				client.player.sendMessage(
@@ -84,8 +105,8 @@ public class ASS implements ModInitializer {
 			if (triggerBot && client.crosshairTarget != null && client.crosshairTarget.getType() == Type.ENTITY
 					&& client.player.getAttackCooldownProgress(0.0f) >= 1.0f) {
 				if (((EntityHitResult) client.crosshairTarget).getEntity() instanceof LivingEntity) {
-					LivingEntity livingEntity = (LivingEntity) ((EntityHitResult) client.crosshairTarget)
-							.getEntity();
+					LivingEntity livingEntity = (LivingEntity) ((EntityHitResult) client.crosshairTarget).getEntity();
+
 					if (livingEntity.isAttackable()
 							&& (livingEntity.hurtTime == 0 || livingEntity instanceof WitherEntity)
 							&& livingEntity.isAlive()) {
@@ -107,6 +128,86 @@ public class ASS implements ModInitializer {
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
 			TPS.register(dispatcher);
 		});
+
+		Builder builder = new RichPresence.Builder().setTimestamps(System.currentTimeMillis() / 1000, null);
+		DiscordRPCClient discordClient = new DiscordRPCClient(new EventListener() {
+			@Override
+			public void onReady(DiscordRPCClient client, User user) {
+				LOGGER.info("Discord RPC ready");
+				client.sendPresence(builder.build());
+			}
+		}, "915859850964115527");
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			if (discordClient.isConnected)
+				discordClient.disconnect();
+		}, "Discord RPC shutdown hook"));
+
+		try {
+			discordClient.connect();
+		} catch (NoDiscordException e) {
+			LOGGER.error("Failed to connect to Discord Gateway", e);
+		}
+
+		new Thread(() -> {
+			while (true) {
+				if (discordClient.isConnected) {
+					discordClient.sendPresence(builder.build());
+				} else {
+					try {
+						discordClient.connect();
+					} catch (NoDiscordException e) {
+					}
+				}
+
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					break;
+				}
+			}
+		}, "Discord RPC update thread").start();
+
+		ClientTickEvents.END_CLIENT_TICK.register((client) -> {
+			if (++rpcTickTimer % 100 == 0) {
+				rpcTickTimer = 0;
+
+				if (client.world == null || client.player == null) {
+					largeImage = "chino";
+					state = null;
+
+					switch (gameState) {
+						case "loading":
+							details = "Loading World...";
+							break;
+
+						case "connecting":
+							details = "Connecting to Server...";
+							break;
+
+						case "disconnected":
+							details = "Disconnected";
+							break;
+
+						default:
+							details = "Main Menu";
+							break;
+					}
+
+				} else {
+					largeImage = client.world.getRegistryKey().getValue().toString().split(":")[1];
+					details = String.format("%.0f💖 %d🍗 %d👕 | %.2f TPS", client.player.getHealth(),
+							client.player.getHungerManager().getFoodLevel(), client.player.getArmor(), TPS.tps);
+					state = getState();
+				}
+
+				builder.setText(details, state);
+				builder.setAssets(largeImage,
+						String.format("%s is playing Minecraft %s",
+								client.getSession().getUsername(), client.getGameVersion()),
+						null, null);
+			}
+		});
 	}
 
 	public static double zoomFov(double fov) {
@@ -122,5 +223,56 @@ public class ASS implements ModInitializer {
 			defaultMouseSens = mouseSens.getValue();
 		mouseSens.setValue(defaultMouseSens / 4);
 		return fov / 4;
+	}
+
+	public static void updateScreen() {
+		if (client.currentScreen instanceof LevelLoadingScreen) {
+			gameState = "loading";
+		} else if (client.currentScreen instanceof ProgressScreen
+				|| client.currentScreen instanceof ConnectScreen) {
+			gameState = "connecting";
+		} else if (client.currentScreen instanceof DisconnectedScreen) {
+			gameState = "disconnected";
+		} else {
+			gameState = "mainmenu";
+		}
+	}
+
+	private static String getState() {
+		if (client.player.isDead())
+			return "Died 💀";
+
+		if (client.player.isSleeping())
+			return "Sleeping 💤";
+
+		if (client.player.isInsideWall())
+			return "Suffocating 😵";
+
+		if (client.player.isOnFire())
+			return "Burning 🔥";
+
+		if (client.player.isFrozen())
+			return "Freezing ❄️";
+
+		if (client.player.hasVehicle())
+			return "Riding a " + client.player.getVehicle().getName().getString();
+
+		if (client.player.isFallFlying())
+			return "Flying 🦅";
+
+		if (client.player.isSwimming())
+			return "Swimming 🏊";
+
+		if (client.player.isCrawling())
+			return "Crawling 🐛";
+
+		if (client.player.isSneaking())
+			return "Sneaking 🚶‍♂️";
+
+		if (client.player.isSprinting())
+			return "Sprinting 🏃";
+
+		return String.format("Holding [%s]x%d", client.player.getStackInHand(Hand.MAIN_HAND).getName().getString(),
+				client.player.getStackInHand(Hand.MAIN_HAND).getCount());
 	}
 }
