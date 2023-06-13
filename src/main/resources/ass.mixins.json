@@ -14,7 +14,9 @@
 		"IngameHudMixin",
 		"LightmapTextureManagerMixin",
 		"MinecraftClientMixin",
-		"PlayerListHudMixin"
+		"PlayerListHudMixin",
+		"SplashOverlayMixin",
+		"TitleScreenMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

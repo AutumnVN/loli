@@ -50,6 +50,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Remove 4 ticks delay when using items
 
+- NoFade
+
+    - Remove fade out animation from loading screen
+
 - NoInsecureChatToast
 
     - Remove warning toast when joining insecure server
