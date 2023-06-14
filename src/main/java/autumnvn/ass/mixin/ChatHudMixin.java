@@ -31,4 +31,9 @@ public class ChatHudMixin {
     public void onDrawIndicatorIcon(DrawContext matrices, int x, int y, Icon icon, CallbackInfo ci) {
         ci.cancel();
     }
+
+    @Inject(method = "clear", at = @At("HEAD"), cancellable = true)
+    private void onClear(boolean clearHistory, CallbackInfo ci) {
+        ci.cancel();
+    }
 }

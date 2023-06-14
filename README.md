@@ -34,6 +34,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Show horse stats in its name tag if MobHealth is enabled
 
+- KeepChatHistory
+
+    - Keep chat history when disconnecting from world/server
+
 - MobHealth
 
     - Press <kbd>H</kbd> to toggle, show mob health in its name tag

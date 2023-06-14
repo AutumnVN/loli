@@ -18,7 +18,7 @@ public class GameRendererMixin {
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    private void render(float f, long l, boolean bl, CallbackInfo ci) {
+    private void onRender(float f, long l, boolean bl, CallbackInfo ci) {
         ASS.updateScreen();
     }
 }

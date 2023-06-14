@@ -58,7 +58,7 @@ public class IngameHudMixin {
     }
 
     @ModifyVariable(method = "renderStatusBars", at = @At(value = "STORE", ordinal = 1), ordinal = 10)
-    private int onRenderRiddenEntityHeartBar(int y) {
+    private int renderRiddenEntityHeartBar(int y) {
         LivingEntity entity = getRiddenEntity();
         if (entity != null) {
             int rows = getHeartRows(getHeartCount(entity));
@@ -68,7 +68,7 @@ public class IngameHudMixin {
     }
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getJumpingMount()Lnet/minecraft/entity/JumpingMount;"))
-    private JumpingMount onRenderJumpMountBar(ClientPlayerEntity player) {
+    private JumpingMount renderJumpMountBar(ClientPlayerEntity player) {
         if (!client.interactionManager.hasExperienceBar() || client.options.jumpKey.isPressed()
                 || player.getMountJumpStrength() > 0)
             return player.getJumpingMount();
@@ -77,7 +77,7 @@ public class IngameHudMixin {
     }
 
     @Inject(method = "renderStatusEffectOverlay", at = @At("TAIL"))
-    private void renderDurationOverlay(DrawContext drawContext, CallbackInfo ci) {
+    private void onRenderStatusEffectOverlay(DrawContext drawContext, CallbackInfo ci) {
         Collection<StatusEffectInstance> collection = this.client.player.getStatusEffects();
         if (!collection.isEmpty()) {
             int beneficialCount = 0;

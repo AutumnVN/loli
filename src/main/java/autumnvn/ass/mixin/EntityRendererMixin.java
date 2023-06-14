@@ -59,7 +59,7 @@ public abstract class EntityRendererMixin<T extends Entity> {
 	}
 
 	@ModifyArgs(method = "renderLabelIfPresent", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;draw(Lnet/minecraft/text/Text;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)I"))
-	private void modify(Args args) {
+	private void onDraw(Args args) {
 		args.set(3, 0xFFFFFFFF);
 		args.set(7, TextRenderer.TextLayerType.SEE_THROUGH);
 	}

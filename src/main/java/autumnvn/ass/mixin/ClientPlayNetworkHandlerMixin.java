@@ -37,7 +37,7 @@ public class ClientPlayNetworkHandlerMixin {
     }
 
     @Inject(method = "onWorldTimeUpdate", at = @At("HEAD"))
-    private void axolotlclient$onWorldUpdate(WorldTimeUpdateS2CPacket packet, CallbackInfo ci) {
+    private void onWorldTimeUpdate(WorldTimeUpdateS2CPacket packet, CallbackInfo ci) {
         TPS.updateTime(packet.getTime());
     }
 

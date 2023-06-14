@@ -20,7 +20,7 @@ public abstract class MinecraftClientMixin {
     private int itemUseCooldown;
 
     @Inject(method = "doItemUse", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;itemUseCooldown:I", ordinal = 0, shift = At.Shift.AFTER))
-    private void onDoItemUseCooldown(CallbackInfo ci) {
+    private void onItemUseCooldown(CallbackInfo ci) {
         itemUseCooldown = 1;
     }
 
