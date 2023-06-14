@@ -20,6 +20,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Show armor above hunger bar
 
+- AutoTotem
+
+    - Automatically move totem to your hand if the totem in your hand was used
+
 - BlockOutline
 
     - Change block outline to white color

@@ -15,8 +15,11 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.toast.Toast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.Items;
 import net.minecraft.network.packet.s2c.play.DeathMessageS2CPacket;
+import net.minecraft.network.packet.s2c.play.EntityStatusS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
+import net.minecraft.screen.slot.SlotActionType;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public class ClientPlayNetworkHandlerMixin {
@@ -50,4 +53,35 @@ public class ClientPlayNetworkHandlerMixin {
         TPS.updateTime(packet.getTime());
     }
 
+    // AutoTotem
+    @Inject(method = "onEntityStatus", at = @At("RETURN"))
+    private void onOnEntityStatus(EntityStatusS2CPacket packet, CallbackInfo info) {
+        if (packet.getStatus() == 35 && packet.getEntity(client.player.getWorld()).equals(client.player)) {
+            int totemSlotId = -1;
+            if (client.player.getMainHandStack().getItem() == Items.TOTEM_OF_UNDYING)
+                totemSlotId = client.player.getInventory().selectedSlot + 36;
+            else if (client.player.getOffHandStack().getItem() == Items.TOTEM_OF_UNDYING)
+                totemSlotId = 45;
+
+            if (totemSlotId != -1) {
+                int inventorySize = client.player.getInventory().main.size();
+
+                for (int i = 0; i < inventorySize; i++) {
+                    if (client.player.getInventory().main.get(i).getItem() == Items.TOTEM_OF_UNDYING
+                            && i != client.player.getInventory().selectedSlot) {
+                        if (i < 9)
+                            client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, i + 36, 0,
+                                    SlotActionType.PICKUP, client.player);
+                        else
+                            client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, i, 0,
+                                    SlotActionType.PICKUP, client.player);
+
+                        client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, totemSlotId, 0,
+                                SlotActionType.PICKUP, client.player);
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
