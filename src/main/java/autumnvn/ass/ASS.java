@@ -15,6 +15,9 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.block.Block;
+import net.minecraft.block.CropBlock;
+import net.minecraft.block.NetherWartBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
@@ -40,8 +43,12 @@ import net.minecraft.entity.passive.TraderLlamaEntity;
 import net.minecraft.entity.passive.WanderingTraderEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.hit.HitResult.Type;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 
 public class ASS implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("ass");
@@ -123,9 +130,8 @@ public class ASS implements ModInitializer {
 				int z = (int) client.player.getZ();
 				String world = client.world.getRegistryKey().getValue().toString().split(":")[1];
 				int health = (int) client.player.getHealth();
-				client.player.networkHandler
-						.sendChatMessage(
-								String.format("%d / %d / %d in %s | %d ❤ | %.2f TPS", x, y, z, world, health, TPS.tps));
+				client.player.networkHandler.sendChatMessage(
+						String.format("%d / %d / %d in %s | %d ❤ | %.2f TPS", x, y, z, world, health, TPS.tps));
 			}
 
 			while (mobHealthKey.wasPressed()) {
@@ -206,6 +212,22 @@ public class ASS implements ModInitializer {
 							client.interactionManager.attackEntity(client.player, livingEntity);
 							client.player.swingHand(Hand.MAIN_HAND);
 						}
+					}
+				}
+			}
+
+			if (client.options.useKey.isPressed() && !client.player.isSneaking() && client.crosshairTarget != null
+					&& client.crosshairTarget.getType() == HitResult.Type.BLOCK) {
+				if (client.crosshairTarget != null && client.crosshairTarget.getType() == HitResult.Type.BLOCK) {
+					final Direction side = ((BlockHitResult) client.crosshairTarget).getSide();
+					final BlockPos pos = ((BlockHitResult) client.crosshairTarget).getBlockPos();
+					final Block block = client.world.getBlockState(pos).getBlock();
+
+					if ((block instanceof CropBlock cropBlock && cropBlock.isMature(client.world.getBlockState(pos))
+							|| (block instanceof NetherWartBlock
+									&& client.world.getBlockState(pos).get(NetherWartBlock.AGE) == 3))) {
+						client.interactionManager.attackBlock(pos, side);
+						client.player.swingHand(Hand.MAIN_HAND);
 					}
 				}
 			}

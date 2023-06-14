@@ -23,7 +23,7 @@ public class ChatHudMixin {
 
     // NoChatIndicator
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(IIIII)V"))
-    public void onFill(DrawContext drawContext, int x1, int y1, int x2, int y2, int color) {
+    private void onFill(DrawContext drawContext, int x1, int y1, int x2, int y2, int color) {
         if (x1 == -4 && x2 == -2)
             return;
 
@@ -31,7 +31,7 @@ public class ChatHudMixin {
     }
 
     @Inject(method = "drawIndicatorIcon", at = @At("HEAD"), cancellable = true)
-    public void onDrawIndicatorIcon(DrawContext matrices, int x, int y, Icon icon, CallbackInfo ci) {
+    private void onDrawIndicatorIcon(DrawContext matrices, int x, int y, Icon icon, CallbackInfo ci) {
         ci.cancel();
     }
 

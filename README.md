@@ -2,6 +2,8 @@
 
 My silly fabric mod with a silly name. No config, everything is hardcoded.
 
+Client-side only.
+
 Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrinth.com/mod/fabric-api) and Minecraft 1.20
 
 ## Features
@@ -58,10 +60,6 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Remove white bar on the left of chat
 
-- NoDelayUse
-
-    - Remove 4 ticks delay when using items
-
 - NoFade
 
     - Remove fade out animation from loading screen
@@ -78,6 +76,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Remove 6 ticks delay when mining blocks
 
+- NoUseDelay
+
+    - Remove 4 ticks delay when using items
+
 - PingNumber
 
     - Show ping number in tab list
@@ -93,6 +95,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 - PlayerInventoryWhileRiding
 
     - Press sprint key + inventory key to open player inventory while riding
+
+- RightClickHarvest
+
+    - Hold right click to break only fully grown crops and nether warts
 
 - StatusEffectTimer
 
