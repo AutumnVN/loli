@@ -10,6 +10,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 public class TPS {
+
     private static long lastTick = -1;
     private static long lastUpdate = -1;
     public static double tps = -1;

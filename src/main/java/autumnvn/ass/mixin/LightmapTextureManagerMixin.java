@@ -9,6 +9,8 @@ import net.minecraft.client.render.LightmapTextureManager;
 
 @Mixin(LightmapTextureManager.class)
 public class LightmapTextureManagerMixin {
+
+    // FullBright
     @Inject(method = "getBrightness", at = @At("HEAD"), cancellable = true)
     private static void onGetBrightness(CallbackInfoReturnable<Float> cir) {
         cir.setReturnValue(1f);

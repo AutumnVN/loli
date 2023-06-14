@@ -15,10 +15,12 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.tutorial.TutorialManager;
 
 @Mixin(MinecraftClient.class)
-public abstract class MinecraftClientMixin {
+public class MinecraftClientMixin {
+
     @Shadow
     private int itemUseCooldown;
 
+    // NoUseDelay
     @Inject(method = "doItemUse", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;itemUseCooldown:I", ordinal = 0, shift = At.Shift.AFTER))
     private void onItemUseCooldown(CallbackInfo ci) {
         itemUseCooldown = 1;
@@ -29,11 +31,13 @@ public abstract class MinecraftClientMixin {
     private TutorialManager tutorialManager;
 
     @Shadow
-    public abstract void setScreen(Screen screen);
+    public void setScreen(Screen screen) {
+    }
 
     @Shadow
     private ClientPlayerEntity player;
 
+    // PlayerInventoryWhileRiding
     @Redirect(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "net/minecraft/client/network/ClientPlayerEntity.openRidingInventory ()V"))
     private void playerInventoryAccess(ClientPlayerEntity instance) {
         MinecraftClient client = MinecraftClient.getInstance();

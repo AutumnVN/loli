@@ -9,6 +9,8 @@ import net.minecraft.client.render.Camera;
 
 @Mixin(Camera.class)
 public class CameraMixin {
+
+    // 3rdCameraNoClip
     @Inject(method = "clipToSpace(D)D", at = @At("HEAD"), cancellable = true)
     private void onClipToSpace(double desiredCameraDistance, CallbackInfoReturnable<Double> cir) {
         cir.setReturnValue(desiredCameraDistance);

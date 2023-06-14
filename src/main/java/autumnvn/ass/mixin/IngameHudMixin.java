@@ -22,10 +22,13 @@ import net.minecraft.entity.JumpingMount;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
 @Mixin(InGameHud.class)
 public class IngameHudMixin {
+
     @Shadow
     @Final
     private MinecraftClient client;
@@ -45,6 +48,7 @@ public class IngameHudMixin {
         return 0;
     }
 
+    // MountHud
     @ModifyVariable(method = "renderMountHealth", at = @At(value = "STORE"), ordinal = 2)
     private int onRenderMountHealth(int y) {
         if (client.interactionManager.hasStatusBars())
@@ -59,11 +63,8 @@ public class IngameHudMixin {
 
     @ModifyVariable(method = "renderStatusBars", at = @At(value = "STORE", ordinal = 1), ordinal = 10)
     private int renderRiddenEntityHeartBar(int y) {
-        LivingEntity entity = getRiddenEntity();
-        if (entity != null) {
-            int rows = getHeartRows(getHeartCount(entity));
-            y -= rows * 10;
-        }
+        if (getRiddenEntity() != null)
+            y -= getHeartRows(getHeartCount(getRiddenEntity())) * 10;
         return y;
     }
 
@@ -72,10 +73,10 @@ public class IngameHudMixin {
         if (!client.interactionManager.hasExperienceBar() || client.options.jumpKey.isPressed()
                 || player.getMountJumpStrength() > 0)
             return player.getJumpingMount();
-
         return null;
     }
 
+    // StatusEffectTimer
     @Inject(method = "renderStatusEffectOverlay", at = @At("TAIL"))
     private void onRenderStatusEffectOverlay(DrawContext drawContext, CallbackInfo ci) {
         Collection<StatusEffectInstance> collection = this.client.player.getStatusEffects();
@@ -93,12 +94,10 @@ public class IngameHudMixin {
                     if (this.client.isDemo())
                         y += 15;
 
-                    if (statusEffect.isBeneficial()) {
-                        beneficialCount++;
-                        x -= 25 * beneficialCount;
-                    } else {
-                        nonBeneficialCount++;
-                        x -= 25 * nonBeneficialCount;
+                    if (statusEffect.isBeneficial())
+                        x -= 25 * ++beneficialCount;
+                    else {
+                        x -= 25 * ++nonBeneficialCount;
                         y += 26;
                     }
 
@@ -120,6 +119,46 @@ public class IngameHudMixin {
                     }
                 }
             }
+        }
+    }
+
+    @Shadow
+    private int scaledWidth;
+
+    @Shadow
+    private int scaledHeight;
+
+    @Shadow
+    private void renderHotbarItem(DrawContext context, int x, int y, float f, PlayerEntity player, ItemStack stack,
+            int seed) {
+    }
+
+    // ArmorHud
+    @Inject(method = "render", at = @At("HEAD"))
+    private void onRender(DrawContext context, float tickDelta, CallbackInfo ci) {
+        int x = 68;
+        int y = this.scaledHeight - 55;
+
+        if (client.player.getAir() < client.player.getMaxAir())
+            y -= 10;
+
+        if (client.player.isCreative()) {
+            y += 16;
+            if (client.player.hasVehicle() && getRiddenEntity() != null && getRiddenEntity().isAlive())
+                y -= 6;
+        }
+
+        if (client.player.hasVehicle() && getRiddenEntity() != null && getRiddenEntity().isAlive()) {
+            if (getRiddenEntity().getMaxHealth() > 21)
+                y -= 20;
+            else
+                y -= 10;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            renderHotbarItem(context, this.scaledWidth / 2 + x, y, tickDelta, client.player,
+                    client.player.getInventory().getArmorStack(i), 1);
+            x -= 15;
         }
     }
 

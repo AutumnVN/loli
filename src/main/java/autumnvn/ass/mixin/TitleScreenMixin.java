@@ -12,11 +12,13 @@ import net.minecraft.client.gui.screen.TitleScreen;
 
 @Mixin(TitleScreen.class)
 public class TitleScreenMixin {
+
     @Shadow
     @Final
     @Mutable
     private boolean doBackgroundFade;
 
+    // NoFade
     @Inject(method = "<init>(Z)V", at = @At("RETURN"))
     private void onInit(boolean doBackgroundFade, CallbackInfo ci) {
         this.doBackgroundFade = false;

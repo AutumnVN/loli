@@ -14,11 +14,14 @@ import net.minecraft.client.gui.hud.MessageIndicator.Icon;
 
 @Mixin(ChatHud.class)
 public class ChatHudMixin {
+
+    // 16kChatHistory
     @ModifyConstant(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V", constant = @Constant(intValue = 100))
     private int maxChatHistory(int length) {
         return 16384;
     }
 
+    // NoChatIndicator
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(IIIII)V"))
     public void onFill(DrawContext drawContext, int x1, int y1, int x2, int y2, int color) {
         if (x1 == -4 && x2 == -2)
@@ -32,6 +35,7 @@ public class ChatHudMixin {
         ci.cancel();
     }
 
+    // KeepChatHistory
     @Inject(method = "clear", at = @At("HEAD"), cancellable = true)
     private void onClear(boolean clearHistory, CallbackInfo ci) {
         ci.cancel();

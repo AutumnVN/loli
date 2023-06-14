@@ -9,6 +9,8 @@ import net.minecraft.entity.Entity;
 
 @Mixin(Entity.class)
 public class EntityMixin {
+
+    // NoInvisible
     @Inject(method = "isInvisible", at = @At("HEAD"), cancellable = true)
     private void onIsInvisible(CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(false);

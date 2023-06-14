@@ -13,6 +13,7 @@ import net.minecraft.client.gui.screen.SplashOverlay;
 
 @Mixin(SplashOverlay.class)
 public class SplashOverlayMixin {
+
     @Shadow
     private long reloadCompleteTime;
 
@@ -20,6 +21,7 @@ public class SplashOverlayMixin {
     @Final
     private MinecraftClient client;
 
+    // NoFade
     @Inject(method = "render", at = @At("HEAD"))
     private void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (this.reloadCompleteTime > 1) {

@@ -22,14 +22,19 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 @Mixin(EntityRenderer.class)
-public abstract class EntityRendererMixin<T extends Entity> {
-	@Shadow
-	protected abstract boolean hasLabel(T entity);
+public class EntityRendererMixin<T extends Entity> {
 
 	@Shadow
-	protected abstract void renderLabelIfPresent(T entity, Text text, MatrixStack matrices,
-			VertexConsumerProvider vertexConsumers, int light);
+	protected boolean hasLabel(T entity) {
+		return false;
+	}
 
+	@Shadow
+	protected void renderLabelIfPresent(T entity, Text text, MatrixStack matrices,
+			VertexConsumerProvider vertexConsumers, int light) {
+	}
+
+	// PlayerHealth, MobHealth, HorseStats
 	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
 	private void onRender(T entity, float yaw, float tickDelta, MatrixStack matrices,
 			VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
@@ -58,6 +63,7 @@ public abstract class EntityRendererMixin<T extends Entity> {
 		}
 	}
 
+	// VisibleName
 	@ModifyArgs(method = "renderLabelIfPresent", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;draw(Lnet/minecraft/text/Text;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)I"))
 	private void onDraw(Args args) {
 		args.set(3, 0xFFFFFFFF);
