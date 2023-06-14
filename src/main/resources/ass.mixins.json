@@ -16,7 +16,8 @@
 		"MinecraftClientMixin",
 		"PlayerListHudMixin",
 		"SplashOverlayMixin",
-		"TitleScreenMixin"
+		"TitleScreenMixin",
+		"WorldRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

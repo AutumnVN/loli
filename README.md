@@ -12,13 +12,17 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Increase chat history from 100 to 16384 lines
 
+- 3rdCameraNoClip
+
+    - Force 3rd person camera go through blocks
+
 - ArmorHud
 
     - Show armor above hunger bar
 
-- 3rdCameraNoClip
+- BlockOutline
 
-    - Force 3rd person camera go through blocks
+    - Change block outline to white color
 
 - ChatCoords
 
