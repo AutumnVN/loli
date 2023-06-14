@@ -46,6 +46,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Remove Blindness and Darkness effects
 
+- NoChatIndicator
+
+    - Remove white bar on the left of chat
+
 - NoDelayUse
 
     - Remove 4 ticks delay when using items
