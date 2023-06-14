@@ -80,6 +80,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Remove 6 ticks delay when mining blocks
 
+- NoSubmersion
+
+    - Remove annoying overlay when inside water, lava, powder snow
+
 - NoUseDelay
 
     - Remove 4 ticks delay when using items
