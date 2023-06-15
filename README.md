@@ -46,7 +46,7 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
 - HorseStats
 
-    - Show horse stats in its name tag if MobHealth is enabled
+    - Show horse stats in its name tag
 
 - KeepChatHistory
 
@@ -54,7 +54,7 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
 - MobHealth
 
-    - Press <kbd>H</kbd> to toggle, show mob health in its name tag
+    - Show mob health in its name tag
 
 - MountHud
 

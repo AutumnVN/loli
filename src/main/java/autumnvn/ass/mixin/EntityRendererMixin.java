@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-import autumnvn.ass.ASS;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -38,7 +37,7 @@ public class EntityRendererMixin<T extends Entity> {
 	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
 	private void onRender(T entity, float yaw, float tickDelta, MatrixStack matrices,
 			VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-		if (entity instanceof PlayerEntity || (entity instanceof LivingEntity && ASS.mobHealth)) {
+		if (entity instanceof LivingEntity) {
 			String entityName = entity.getName().getString();
 			int health = (int) Math.ceil(getHealth(entity));
 			entityName += "  " + getHealthColor(health) + health + Formatting.RED + " ❤";
@@ -46,7 +45,7 @@ public class EntityRendererMixin<T extends Entity> {
 			if (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())
 				entityName += Formatting.RESET + " [C]";
 
-			if (entity instanceof HorseEntity && ASS.mobHealth) {
+			if (entity instanceof HorseEntity) {
 				double speed = ((HorseEntity) entity).getAttributes()
 						.getValue(EntityAttributes.GENERIC_MOVEMENT_SPEED) * 42.157787584D;
 				double jumpStrength = ((HorseEntity) entity).getJumpStrength();
