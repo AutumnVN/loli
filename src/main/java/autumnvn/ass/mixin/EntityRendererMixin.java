@@ -33,7 +33,7 @@ public class EntityRendererMixin<T extends Entity> {
 			VertexConsumerProvider vertexConsumers, int light) {
 	}
 
-	// PlayerHealth, MobHealth, HorseStats
+	// PlayerHealth, MobHealth, HorseStats, PlayerGamemode
 	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
 	private void onRender(T entity, float yaw, float tickDelta, MatrixStack matrices,
 			VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
