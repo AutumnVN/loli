@@ -52,6 +52,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Show horse stats in its name tag
 
+- InfoHud
+
+    - Show FPS, XYZ, direction, TPS, ping in top left corner
+
 - KeepChatHistory
 
     - Keep chat history when disconnecting from world/server
@@ -123,10 +127,6 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 - StatusEffectTimer
 
     - Show status effect time remaining in its icon
-
-- TPS
-
-    - `/tps` to show server TPS
 
 - TriggerBot
 

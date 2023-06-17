@@ -6,7 +6,6 @@ import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import autumnvn.ass.command.TPS;
 import club.bottomservices.discordrpc.lib.DiscordRPCClient;
 import club.bottomservices.discordrpc.lib.EventListener;
 import club.bottomservices.discordrpc.lib.RichPresence;
@@ -14,7 +13,6 @@ import club.bottomservices.discordrpc.lib.RichPresence.Builder;
 import club.bottomservices.discordrpc.lib.User;
 import club.bottomservices.discordrpc.lib.exceptions.NoDiscordException;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.block.Block;
@@ -76,6 +74,10 @@ public class ASS implements ModInitializer {
 	private static String state = null;
 	private static String gameState = "mainmenu";
 
+	private static long lastTick = -1;
+	private static long lastUpdate = -1;
+	public static double tps = -1;
+
 	@Override
 	public void onInitialize() {
 		KeyBinding chatCoordsKey = KeyBindingHelper.registerKeyBinding(
@@ -130,13 +132,13 @@ public class ASS implements ModInitializer {
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (chatCoordsKey.wasPressed()) {
-				int x = (int) client.player.getX();
-				int y = (int) client.player.getY();
-				int z = (int) client.player.getZ();
+				int x = client.player.getBlockPos().getX();
+				int y = client.player.getBlockPos().getY();
+				int z = client.player.getBlockPos().getZ();
 				String world = client.world.getRegistryKey().getValue().toString().split(":")[1];
 				int health = (int) client.player.getHealth();
 				client.player.networkHandler.sendChatMessage(
-						String.format("%d / %d / %d in %s | %d ❤ | %.1f TPS", x, y, z, world, health, TPS.tps));
+						String.format("%d / %d / %d in %s | %d ❤ | %.1f TPS", x, y, z, world, health, tps));
 			}
 
 			while (chatItemKey.wasPressed()) {
@@ -188,7 +190,7 @@ public class ASS implements ModInitializer {
 				} else {
 					largeImage = client.world.getRegistryKey().getValue().toString().split(":")[1];
 					details = String.format("%.0f💖 %d🍗 %d👕 | %.1f TPS", client.player.getHealth(),
-							client.player.getHungerManager().getFoodLevel(), client.player.getArmor(), TPS.tps);
+							client.player.getHungerManager().getFoodLevel(), client.player.getArmor(), tps);
 					state = getState();
 				}
 
@@ -245,10 +247,6 @@ public class ASS implements ModInitializer {
 					}
 				}
 			}
-		});
-
-		ClientCommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-			TPS.register(dispatcher);
 		});
 	}
 
@@ -316,5 +314,25 @@ public class ASS implements ModInitializer {
 
 		return String.format("Holding [%s]x%d", client.player.getStackInHand(Hand.MAIN_HAND).getName().getString(),
 				client.player.getStackInHand(Hand.MAIN_HAND).getCount());
+	}
+
+	public static void updateTime(long ticks) {
+		if (lastTick < 0) {
+			lastTick = ticks;
+			lastUpdate = System.nanoTime();
+			return;
+		}
+
+		long time = System.nanoTime();
+		double elapsedMilli = (time - lastUpdate) / 1000000d;
+		int passedTicks = (int) (ticks - lastTick);
+
+		if (passedTicks > 0) {
+			double mspt = elapsedMilli / passedTicks;
+			tps = Math.min(1000 / mspt, 20);
+		}
+
+		lastTick = ticks;
+		lastUpdate = time;
 	}
 }

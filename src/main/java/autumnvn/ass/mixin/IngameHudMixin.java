@@ -1,5 +1,6 @@
 package autumnvn.ass.mixin;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.spongepowered.asm.mixin.Final;
@@ -13,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.google.common.collect.Ordering;
 
+import autumnvn.ass.ASS;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -24,6 +26,7 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
 @Mixin(InGameHud.class)
@@ -108,14 +111,14 @@ public class IngameHudMixin {
 
                     int durationLength = client.textRenderer.getWidth(duration);
                     drawContext.drawTextWithShadow(client.textRenderer, duration, x + 13 - (durationLength / 2), y + 14,
-                            0xFFFFFFFF);
+                            0xffffff);
                     int amplifier = statusEffectInstance.getAmplifier();
 
                     if (amplifier > 0) {
                         String amplifierString = (amplifier < 6) ? I18n.translate("potion.potency." + amplifier) : "**";
                         int amplifierLength = client.textRenderer.getWidth(amplifierString);
                         drawContext.drawTextWithShadow(client.textRenderer, amplifierString, x + 22 - amplifierLength,
-                                y + 3, 0xFFFFFFFF);
+                                y + 3, 0xffffff);
                     }
                 }
             }
@@ -135,7 +138,7 @@ public class IngameHudMixin {
 
     // ArmorHud
     @Inject(method = "render", at = @At("HEAD"))
-    private void onRender(DrawContext context, float tickDelta, CallbackInfo ci) {
+    private void onRenderArmorHud(DrawContext context, float tickDelta, CallbackInfo ci) {
         int x = 68;
         int y = this.scaledHeight - 55;
 
@@ -176,5 +179,49 @@ public class IngameHudMixin {
             return seconds / 60 + "m";
 
         return String.valueOf(seconds);
+    }
+
+    // InfoHud
+    @Inject(method = "render", at = @At("TAIL"))
+    private void onRenderInfoHud(DrawContext context, float tickDelta, CallbackInfo ci) {
+        if (client.options.debugEnabled)
+            return;
+
+        ArrayList<String> lines = new ArrayList<>();
+
+        Direction direction = client.player.getHorizontalFacing();
+
+        String offset = "";
+
+        if (direction.getOffsetX() > 0)
+            offset += "+X";
+        else if (direction.getOffsetX() < 0)
+            offset += "-X";
+
+        if (direction.getOffsetZ() > 0)
+            offset += "+Z";
+        else if (direction.getOffsetZ() < 0)
+            offset += "-Z";
+
+        lines.add(String.format("%d fps", client.getCurrentFps()));
+        lines.add(String.format("%d, %d, %d", client.player.getBlockPos().getX(), client.player.getBlockPos().getY(),
+                client.player.getBlockPos().getZ()));
+        lines.add(String.format("%s %s", cap(direction.asString()), offset));
+        lines.add(String.format("%.1f tps", ASS.tps));
+        if (!client.isInSingleplayer()
+                && client.getNetworkHandler().getPlayerListEntry(client.player.getUuid()) != null)
+            lines.add(String.format("%dms",
+                    client.getNetworkHandler().getPlayerListEntry(client.player.getUuid()).getLatency()));
+
+        for (String line : lines) {
+            context.drawText(client.textRenderer, line, 2,
+                    2 + (lines.indexOf(line) * (client.textRenderer.fontHeight + 2)), 0xffffff, false);
+        }
+    }
+
+    private static String cap(String str) {
+        if (str == null)
+            return null;
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 }

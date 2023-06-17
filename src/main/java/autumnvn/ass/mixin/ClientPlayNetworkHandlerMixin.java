@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import autumnvn.ass.ASS;
-import autumnvn.ass.command.TPS;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.toast.Toast;
@@ -34,9 +33,9 @@ public class ClientPlayNetworkHandlerMixin {
         Entity entity = client.world.getEntityById(packet.getEntityId());
 
         if (entity == client.player) {
-            ASS.deathX = (int) client.player.getX();
-            ASS.deathY = (int) client.player.getY();
-            ASS.deathZ = (int) client.player.getZ();
+            ASS.deathX = client.player.getBlockPos().getX();
+            ASS.deathY = client.player.getBlockPos().getY();
+            ASS.deathZ = client.player.getBlockPos().getZ();
             ASS.deathWorld = client.player.clientWorld.getRegistryKey().getValue().toString().split(":")[1];
             ASS.died = true;
         }
@@ -50,7 +49,7 @@ public class ClientPlayNetworkHandlerMixin {
     // TPS
     @Inject(method = "onWorldTimeUpdate", at = @At("HEAD"))
     private void onWorldTimeUpdate(WorldTimeUpdateS2CPacket packet, CallbackInfo ci) {
-        TPS.updateTime(packet.getTime());
+        ASS.updateTime(packet.getTime());
     }
 
     // AutoTotem
