@@ -1,5 +1,7 @@
 package autumnvn.ass;
 
+import java.util.stream.Collectors;
+
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,7 @@ import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.LevelLoadingScreen;
 import net.minecraft.client.gui.screen.ProgressScreen;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.util.InputUtil;
@@ -76,6 +79,8 @@ public class ASS implements ModInitializer {
 	public void onInitialize() {
 		KeyBinding chatCoordsKey = KeyBindingHelper.registerKeyBinding(
 				new KeyBinding("ass.chatCoords", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, "AutumnVN's silly stuffs"));
+		KeyBinding chatItemKey = KeyBindingHelper.registerKeyBinding(
+				new KeyBinding("ass.chatItem", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_I, "AutumnVN's silly stuffs"));
 		KeyBinding triggerBotKey = KeyBindingHelper.registerKeyBinding(
 				new KeyBinding("ass.triggerBot", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_R, "AutumnVN's silly stuffs"));
 		zoomKey = KeyBindingHelper.registerKeyBinding(
@@ -128,7 +133,17 @@ public class ASS implements ModInitializer {
 				String world = client.world.getRegistryKey().getValue().toString().split(":")[1];
 				int health = (int) client.player.getHealth();
 				client.player.networkHandler.sendChatMessage(
-						String.format("%d / %d / %d in %s | %d ❤ | %.2f TPS", x, y, z, world, health, TPS.tps));
+						String.format("%d / %d / %d in %s | %d ❤ | %.1f TPS", x, y, z, world, health, TPS.tps));
+			}
+
+			while (chatItemKey.wasPressed()) {
+				String name = client.player.getMainHandStack().getName().getString();
+				int count = client.player.getMainHandStack().getCount();
+				String lore = client.player.getMainHandStack().getTooltip(client.player, TooltipContext.Default.BASIC)
+						.stream().skip(1).map(Text::getString).collect(Collectors.joining(", "));
+				client.player.networkHandler
+						.sendChatMessage(
+								String.format("[%s]x%d%s%s", name, count, lore.isEmpty() ? "" : " | ", lore));
 			}
 
 			while (triggerBotKey.wasPressed()) {
@@ -164,7 +179,7 @@ public class ASS implements ModInitializer {
 
 				} else {
 					largeImage = client.world.getRegistryKey().getValue().toString().split(":")[1];
-					details = String.format("%.0f💖 %d🍗 %d👕 | %.2f TPS", client.player.getHealth(),
+					details = String.format("%.0f💖 %d🍗 %d👕 | %.1f TPS", client.player.getHealth(),
 							client.player.getHungerManager().getFoodLevel(), client.player.getArmor(), TPS.tps);
 					state = getState();
 				}

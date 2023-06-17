@@ -18,7 +18,7 @@ public class TPS {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(literal("tps").executes(context -> {
             MinecraftClient client = context.getSource().getClient();
-            client.player.sendMessage(Text.literal(String.format("%sTPS: %.2f", getTpsColor(tps), tps)), false);
+            client.player.sendMessage(Text.literal(String.format("%sTPS: %.1f", getTpsColor(tps), tps)), false);
             return 1;
         }));
     }

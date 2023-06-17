@@ -32,6 +32,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Press <kbd>O</kbd> to send coords, dimension, HP, TPS to chat
 
+- ChatItem
+
+    - Press <kbd>I</kbd> to send main hand item name, count, enchantments, lore to chat
+
 - DeathCoords
 
     - Show death coords in chat when respawn
