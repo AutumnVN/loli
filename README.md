@@ -76,6 +76,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Remove fade out animation from loading screen
 
+- NoFishingBobber
+
+    - Remove fishing bobber when it hooked on your face
+
 - NoInsecureChatToast
 
     - Remove warning toast when joining insecure server

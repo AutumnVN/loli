@@ -141,9 +141,8 @@ public class ASS implements ModInitializer {
 				int count = client.player.getMainHandStack().getCount();
 				String lore = client.player.getMainHandStack().getTooltip(client.player, TooltipContext.Default.BASIC)
 						.stream().skip(1).map(Text::getString).collect(Collectors.joining(", "));
-				client.player.networkHandler
-						.sendChatMessage(
-								String.format("[%s]x%d%s%s", name, count, lore.isEmpty() ? "" : " | ", lore));
+				client.player.networkHandler.sendChatMessage(
+						String.format("[%s]x%d%s%s", name, count, lore.isEmpty() ? "" : " | ", lore));
 			}
 
 			while (triggerBotKey.wasPressed()) {
