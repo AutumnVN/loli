@@ -64,6 +64,7 @@ public class ASS implements ModInitializer {
 	public static String deathWorld = "";
 
 	public static boolean triggerBot = false;
+	public static boolean noUseDelay = false;
 
 	public static KeyBinding zoomKey;
 	private static SimpleOption<Double> mouseSens;
@@ -83,6 +84,8 @@ public class ASS implements ModInitializer {
 				new KeyBinding("ass.chatItem", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_I, "AutumnVN's silly stuffs"));
 		KeyBinding triggerBotKey = KeyBindingHelper.registerKeyBinding(
 				new KeyBinding("ass.triggerBot", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_R, "AutumnVN's silly stuffs"));
+		KeyBinding noUseDelayKey = KeyBindingHelper.registerKeyBinding(
+				new KeyBinding("ass.noUseDelay", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_U, "AutumnVN's silly stuffs"));
 		zoomKey = KeyBindingHelper.registerKeyBinding(
 				new KeyBinding("ass.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "AutumnVN's silly stuffs"));
 
@@ -149,6 +152,12 @@ public class ASS implements ModInitializer {
 				triggerBot = !triggerBot;
 				client.player.sendMessage(
 						Text.literal(triggerBot ? "§aTriggerBot is enabled" : "§cTriggerBot is disabled"), true);
+			}
+
+			while (noUseDelayKey.wasPressed()) {
+				noUseDelay = !noUseDelay;
+				client.player.sendMessage(
+						Text.literal(noUseDelay ? "§aNoUseDelay is enabled" : "§cNoUseDelay is disabled"), true);
 			}
 
 			if (++rpcTickTimer % 100 == 0) {

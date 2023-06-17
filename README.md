@@ -98,7 +98,7 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
 - NoUseDelay
 
-    - Remove 4 ticks delay when using items
+    - Press <kbd>U</kbd> to toggle, remove 4 ticks delay when holding right click
 
 - PingNumber
 
