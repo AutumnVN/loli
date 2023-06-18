@@ -56,6 +56,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Show FPS, XYZ, direction, TPS, ping in top left corner
 
+- InstantSneak
+
+    - Instantly sneak without transition animation
+
 - KeepChatHistory
 
     - Keep chat history when disconnecting from world/server
