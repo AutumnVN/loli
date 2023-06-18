@@ -84,6 +84,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Remove fishing bobber when it hooked on your face
 
+- NoFog
+
+    - Remove fog
+
 - NoInsecureChatToast
 
     - Remove warning toast when joining insecure server
