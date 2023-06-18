@@ -42,6 +42,7 @@ import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.passive.SquidEntity;
 import net.minecraft.entity.passive.TraderLlamaEntity;
 import net.minecraft.entity.passive.WanderingTraderEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -62,6 +63,7 @@ public class ASS implements ModInitializer {
 	public static String deathWorld = "";
 
 	public static boolean triggerBot = false;
+	public static boolean attackPlayer = true;
 	public static boolean noUseDelay = false;
 
 	public static KeyBinding zoomKey;
@@ -86,6 +88,8 @@ public class ASS implements ModInitializer {
 				new KeyBinding("ass.chatItem", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_I, "AutumnVN's silly stuffs"));
 		KeyBinding triggerBotKey = KeyBindingHelper.registerKeyBinding(
 				new KeyBinding("ass.triggerBot", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_R, "AutumnVN's silly stuffs"));
+		KeyBinding attackPlayerKey = KeyBindingHelper.registerKeyBinding(
+				new KeyBinding("ass.attackPlayer", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_P, "AutumnVN's silly stuffs"));
 		KeyBinding noUseDelayKey = KeyBindingHelper.registerKeyBinding(
 				new KeyBinding("ass.noUseDelay", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_U, "AutumnVN's silly stuffs"));
 		zoomKey = KeyBindingHelper.registerKeyBinding(
@@ -137,8 +141,13 @@ public class ASS implements ModInitializer {
 				int z = client.player.getBlockPos().getZ();
 				String world = client.world.getRegistryKey().getValue().toString().split(":")[1];
 				int health = (int) client.player.getHealth();
+				String ping = "";
+				if (!client.isInSingleplayer()
+						&& client.getNetworkHandler().getPlayerListEntry(client.player.getUuid()) != null)
+					ping = String.format(" | %dms",
+							client.getNetworkHandler().getPlayerListEntry(client.player.getUuid()).getLatency());
 				client.player.networkHandler.sendChatMessage(
-						String.format("%d / %d / %d in %s | %d ❤ | %.1f TPS", x, y, z, world, health, tps));
+						String.format("%d, %d, %d in %s | %d ❤ | %.1f tps%s", x, y, z, world, health, tps, ping));
 			}
 
 			while (chatItemKey.wasPressed()) {
@@ -154,6 +163,12 @@ public class ASS implements ModInitializer {
 				triggerBot = !triggerBot;
 				client.player.sendMessage(
 						Text.literal(triggerBot ? "§aTriggerBot is enabled" : "§cTriggerBot is disabled"), true);
+			}
+
+			while (attackPlayerKey.wasPressed()) {
+				attackPlayer = !attackPlayer;
+				client.player.sendMessage(
+						Text.literal(attackPlayer ? "§aAttackPlayer is enabled" : "§cAttackPlayer is disabled"), true);
 			}
 
 			while (noUseDelayKey.wasPressed()) {
@@ -188,9 +203,14 @@ public class ASS implements ModInitializer {
 					}
 
 				} else {
+					String ping = "";
+					if (!client.isInSingleplayer()
+							&& client.getNetworkHandler().getPlayerListEntry(client.player.getUuid()) != null)
+						ping = String.format(" | %dms",
+								client.getNetworkHandler().getPlayerListEntry(client.player.getUuid()).getLatency());
 					largeImage = client.world.getRegistryKey().getValue().toString().split(":")[1];
-					details = String.format("%.0f💖 %d🍗 %d👕 | %.1f TPS", client.player.getHealth(),
-							client.player.getHungerManager().getFoodLevel(), client.player.getArmor(), tps);
+					details = String.format("%.0f💖 %d🍗 | %.1f tps%s", client.player.getHealth(),
+							client.player.getHungerManager().getFoodLevel(), tps, ping);
 					state = getState();
 				}
 
@@ -215,18 +235,22 @@ public class ASS implements ModInitializer {
 				if (((EntityHitResult) client.crosshairTarget).getEntity() instanceof LivingEntity) {
 					LivingEntity livingEntity = (LivingEntity) ((EntityHitResult) client.crosshairTarget).getEntity();
 
-					if (livingEntity.isAttackable()
-							&& (livingEntity.hurtTime == 0 || livingEntity instanceof WitherEntity)
-							&& livingEntity.isAlive()) {
-						if (!(livingEntity instanceof PassiveEntity && !(livingEntity instanceof ChickenEntity
-								|| livingEntity instanceof CowEntity || livingEntity instanceof PigEntity
-								|| livingEntity instanceof PolarBearEntity || livingEntity instanceof PufferfishEntity
-								|| livingEntity instanceof RabbitEntity || livingEntity instanceof SchoolingFishEntity
-								|| livingEntity instanceof SheepEntity || livingEntity instanceof SquidEntity
-								|| livingEntity instanceof TraderLlamaEntity
-								|| livingEntity instanceof WanderingTraderEntity))) {
-							client.interactionManager.attackEntity(client.player, livingEntity);
-							client.player.swingHand(Hand.MAIN_HAND);
+					if (!(livingEntity instanceof PlayerEntity && !attackPlayer)) {
+						if (livingEntity.isAttackable()
+								&& (livingEntity.hurtTime == 0 || livingEntity instanceof WitherEntity)
+								&& livingEntity.isAlive()) {
+							if (!(livingEntity instanceof PassiveEntity && !(livingEntity instanceof ChickenEntity
+									|| livingEntity instanceof CowEntity || livingEntity instanceof PigEntity
+									|| livingEntity instanceof PolarBearEntity
+									|| livingEntity instanceof PufferfishEntity
+									|| livingEntity instanceof RabbitEntity
+									|| livingEntity instanceof SchoolingFishEntity
+									|| livingEntity instanceof SheepEntity || livingEntity instanceof SquidEntity
+									|| livingEntity instanceof TraderLlamaEntity
+									|| livingEntity instanceof WanderingTraderEntity))) {
+								client.interactionManager.attackEntity(client.player, livingEntity);
+								client.player.swingHand(Hand.MAIN_HAND);
+							}
 						}
 					}
 				}

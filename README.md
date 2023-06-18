@@ -30,7 +30,7 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
 - ChatCoords
 
-    - Press <kbd>O</kbd> to send coords, dimension, HP, TPS to chat
+    - Press <kbd>O</kbd> to send coords, dimension, HP, TPS, ping to chat
 
 - ChatItem
 
@@ -130,7 +130,8 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
 - TriggerBot
 
-    - Press <kbd>R</kbd> to toggle, automatically attack entities in front of you. Ignored some unwanted passive mobs
+    - Press <kbd>R</kbd> to toggle, automatically attack entities in front of you. Ignored some unwanted passive mobs.
+    - Press <kbd>P</kbd> to remove/add player entities from target list
 
 - VisibleName
 
