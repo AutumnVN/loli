@@ -35,6 +35,8 @@ public class CameraMixin {
     // InstantSneak
     @Inject(method = "updateEyeHeight", at = @At("HEAD"))
     private void onUpdateEyeHeight(CallbackInfo ci) {
-        cameraY = focusedEntity.getStandingEyeHeight();
+        if (focusedEntity != null) {
+            cameraY = focusedEntity.getStandingEyeHeight();
+        }
     }
 }
