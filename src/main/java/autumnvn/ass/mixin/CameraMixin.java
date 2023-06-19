@@ -22,7 +22,7 @@ public class CameraMixin {
 
     // NoSubmersion
     @Inject(method = "getSubmersionType", at = @At("HEAD"), cancellable = true)
-    public void onGetSubmersionType(CallbackInfoReturnable<CameraSubmersionType> cir) {
+    private void onGetSubmersionType(CallbackInfoReturnable<CameraSubmersionType> cir) {
         cir.setReturnValue(CameraSubmersionType.NONE);
     }
 

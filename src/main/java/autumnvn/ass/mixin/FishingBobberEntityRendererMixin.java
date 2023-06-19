@@ -18,7 +18,7 @@ public class FishingBobberEntityRendererMixin {
 
     // NoFishingBobber
     @Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/entity/projectile/FishingBobberEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", cancellable = true)
-    public void renderCallback(FishingBobberEntity fishingBobberEntity, float f, float g, MatrixStack matrixStack,
+    private void renderCallback(FishingBobberEntity fishingBobberEntity, float f, float g, MatrixStack matrixStack,
             VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
         if (fishingBobberEntity.getHookedEntity() == client.player)
             ci.cancel();
