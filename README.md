@@ -30,7 +30,7 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
 - ChatCoords
 
-    - Press <kbd>O</kbd> to send coords, dimension, HP, TPS, ping to chat
+    - Press <kbd>O</kbd> to send coords, dimension, health, hunger, TPS, ping to chat
 
 - ChatItem
 

@@ -140,14 +140,16 @@ public class ASS implements ModInitializer {
 				int y = client.player.getBlockPos().getY();
 				int z = client.player.getBlockPos().getZ();
 				String world = client.world.getRegistryKey().getValue().toString().split(":")[1];
-				int health = (int) client.player.getHealth();
+				float health = client.player.getHealth();
+				int hunger = client.player.getHungerManager().getFoodLevel();
 				String ping = "";
 				if (!client.isInSingleplayer()
 						&& client.getNetworkHandler().getPlayerListEntry(client.player.getUuid()) != null)
 					ping = String.format(" | %dms",
 							client.getNetworkHandler().getPlayerListEntry(client.player.getUuid()).getLatency());
 				client.player.networkHandler.sendChatMessage(
-						String.format("%d, %d, %d in %s | %d ❤ | %.1f tps%s", x, y, z, world, health, tps, ping));
+						String.format("%d, %d, %d in %s | %.0f❤ %d🍗 | %.1f tps%s", x, y, z, world, health, hunger, tps,
+								ping));
 			}
 
 			while (chatItemKey.wasPressed()) {
@@ -203,14 +205,17 @@ public class ASS implements ModInitializer {
 					}
 
 				} else {
+					float health = client.player.getHealth();
+					int hunger = client.player.getHungerManager().getFoodLevel();
 					String ping = "";
+
 					if (!client.isInSingleplayer()
 							&& client.getNetworkHandler().getPlayerListEntry(client.player.getUuid()) != null)
 						ping = String.format(" | %dms",
 								client.getNetworkHandler().getPlayerListEntry(client.player.getUuid()).getLatency());
+
 					largeImage = client.world.getRegistryKey().getValue().toString().split(":")[1];
-					details = String.format("%.0f💖 %d🍗 | %.1f tps%s", client.player.getHealth(),
-							client.player.getHungerManager().getFoodLevel(), tps, ping);
+					details = String.format("%.0f💖 %d🍗 | %.1f tps%s", health, hunger, tps, ping);
 					state = getState();
 				}
 
