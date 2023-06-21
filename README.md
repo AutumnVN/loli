@@ -136,6 +136,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
     - Show status effect time remaining in its icon
 
+- TranslucentLava
+
+    - Make lava translucent like water
+
 - TriggerBot
 
     - Press <kbd>R</kbd> to toggle, automatically attack entities in front of you. Ignored some unwanted passive mobs.

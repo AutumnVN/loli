@@ -49,6 +49,7 @@ import net.minecraft.entity.passive.SquidEntity;
 import net.minecraft.entity.passive.TraderLlamaEntity;
 import net.minecraft.entity.passive.WanderingTraderEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -103,6 +104,8 @@ public class ASS implements ModInitializer {
 				new KeyBinding("ass.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "AutumnVN's silly stuffs"));
 
 		BlockRenderLayerMap.INSTANCE.putBlock(Blocks.BARRIER, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putFluid(Fluids.LAVA, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putFluid(Fluids.FLOWING_LAVA, RenderLayer.getTranslucent());
 		FabricLoader.getInstance().getModContainer("ass").ifPresent(container -> {
 			ResourceManagerHelper.registerBuiltinResourcePack(new Identifier("ass", "ass"), container,
 					ResourcePackActivationType.DEFAULT_ENABLED);
