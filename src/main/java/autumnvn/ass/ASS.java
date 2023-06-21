@@ -13,9 +13,14 @@ import club.bottomservices.discordrpc.lib.RichPresence.Builder;
 import club.bottomservices.discordrpc.lib.User;
 import club.bottomservices.discordrpc.lib.exceptions.NoDiscordException;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.NetherWartBlock;
 import net.minecraft.client.MinecraftClient;
@@ -26,6 +31,7 @@ import net.minecraft.client.gui.screen.ProgressScreen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.option.SimpleOption;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.WitherEntity;
@@ -45,6 +51,7 @@ import net.minecraft.entity.passive.WanderingTraderEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -94,6 +101,12 @@ public class ASS implements ModInitializer {
 				new KeyBinding("ass.noUseDelay", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_U, "AutumnVN's silly stuffs"));
 		zoomKey = KeyBindingHelper.registerKeyBinding(
 				new KeyBinding("ass.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "AutumnVN's silly stuffs"));
+
+		BlockRenderLayerMap.INSTANCE.putBlock(Blocks.BARRIER, RenderLayer.getTranslucent());
+		FabricLoader.getInstance().getModContainer("ass").ifPresent(container -> {
+			ResourceManagerHelper.registerBuiltinResourcePack(new Identifier("ass", "ass"), container,
+					ResourcePackActivationType.DEFAULT_ENABLED);
+		});
 
 		Builder builder = new RichPresence.Builder().setTimestamps(System.currentTimeMillis() / 1000, null);
 		DiscordRPCClient discordClient = new DiscordRPCClient(new EventListener() {

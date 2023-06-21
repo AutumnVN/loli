@@ -5,10 +5,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -65,8 +65,12 @@ public class EntityRendererMixin<T extends Entity> {
 	// VisibleName
 	@ModifyArgs(method = "renderLabelIfPresent", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;draw(Lnet/minecraft/text/Text;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)I"))
 	private void onDraw(Args args) {
-		args.set(3, 0xffffff);
-		args.set(7, TextRenderer.TextLayerType.SEE_THROUGH);
+		args.set(3, 0xffffffff);
+	}
+
+	@ModifyVariable(method = "renderLabelIfPresent", at = @At("STORE"), ordinal = 0)
+	private boolean bl(boolean bl) {
+		return true;
 	}
 
 	private float getHealth(T entity) {

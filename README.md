@@ -141,6 +141,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
     - Press <kbd>R</kbd> to toggle, automatically attack entities in front of you. Ignored some unwanted passive mobs.
     - Press <kbd>P</kbd> to remove/add player entities from target list
 
+- VisibleBarrier
+
+    - Force render barrier blocks
+
 - VisibleName
 
     - Force render name tag normally even if it's behind blocks or player is sneaking

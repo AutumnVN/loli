@@ -52,7 +52,7 @@ public class IngameHudMixin {
     }
 
     // MountHud
-    @ModifyVariable(method = "renderMountHealth", at = @At(value = "STORE"), ordinal = 2)
+    @ModifyVariable(method = "renderMountHealth", at = @At("STORE"), ordinal = 2)
     private int onRenderMountHealth(int y) {
         if (client.interactionManager.hasStatusBars())
             y -= 10;
