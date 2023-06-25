@@ -1,4 +1,4 @@
-package autumnvn.ass.mixin;
+package autumnvn.loli.mixin;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

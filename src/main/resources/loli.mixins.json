@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "autumnvn.ass.mixin",
+	"package": "autumnvn.loli.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
 		"BackgroundRendererMixin",

@@ -1,4 +1,4 @@
-package autumnvn.ass.mixin;
+package autumnvn.loli.mixin;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import autumnvn.ass.ASS;
+import autumnvn.loli.Loli;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.toast.Toast;
@@ -33,11 +33,11 @@ public class ClientPlayNetworkHandlerMixin {
         Entity entity = client.world.getEntityById(packet.getEntityId());
 
         if (entity == client.player) {
-            ASS.deathX = client.player.getBlockPos().getX();
-            ASS.deathY = client.player.getBlockPos().getY();
-            ASS.deathZ = client.player.getBlockPos().getZ();
-            ASS.deathWorld = client.player.clientWorld.getRegistryKey().getValue().toString().split(":")[1];
-            ASS.died = true;
+            Loli.deathX = client.player.getBlockPos().getX();
+            Loli.deathY = client.player.getBlockPos().getY();
+            Loli.deathZ = client.player.getBlockPos().getZ();
+            Loli.deathWorld = client.player.clientWorld.getRegistryKey().getValue().toString().split(":")[1];
+            Loli.died = true;
         }
     }
 
@@ -49,7 +49,7 @@ public class ClientPlayNetworkHandlerMixin {
     // TPS
     @Inject(method = "onWorldTimeUpdate", at = @At("HEAD"))
     private void onWorldTimeUpdate(WorldTimeUpdateS2CPacket packet, CallbackInfo ci) {
-        ASS.updateTime(packet.getTime());
+        Loli.updateTime(packet.getTime());
     }
 
     // AutoTotem

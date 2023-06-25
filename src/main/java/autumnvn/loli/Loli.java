@@ -1,4 +1,4 @@
-package autumnvn.ass;
+package autumnvn.loli;
 
 import java.util.stream.Collectors;
 
@@ -60,8 +60,8 @@ import net.minecraft.util.hit.HitResult.Type;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-public class ASS implements ModInitializer {
-	public static final Logger LOGGER = LoggerFactory.getLogger("ass");
+public class Loli implements ModInitializer {
+	public static final Logger LOGGER = LoggerFactory.getLogger("loli");
 	public static MinecraftClient client = MinecraftClient.getInstance();
 
 	public static boolean died = false;
@@ -91,23 +91,23 @@ public class ASS implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		KeyBinding chatCoordsKey = KeyBindingHelper.registerKeyBinding(
-				new KeyBinding("ass.chatCoords", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, "AutumnVN's silly stuffs"));
+				new KeyBinding("key.loli.chatCoords", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, "Loli"));
 		KeyBinding chatItemKey = KeyBindingHelper.registerKeyBinding(
-				new KeyBinding("ass.chatItem", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_I, "AutumnVN's silly stuffs"));
+				new KeyBinding("key.loli.chatItem", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_I, "Loli"));
 		KeyBinding triggerBotKey = KeyBindingHelper.registerKeyBinding(
-				new KeyBinding("ass.triggerBot", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_R, "AutumnVN's silly stuffs"));
+				new KeyBinding("key.loli.triggerBot", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_R, "Loli"));
 		KeyBinding attackPlayerKey = KeyBindingHelper.registerKeyBinding(
-				new KeyBinding("ass.attackPlayer", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_P, "AutumnVN's silly stuffs"));
+				new KeyBinding("key.loli.attackPlayer", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_P, "Loli"));
 		KeyBinding noUseDelayKey = KeyBindingHelper.registerKeyBinding(
-				new KeyBinding("ass.noUseDelay", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_U, "AutumnVN's silly stuffs"));
+				new KeyBinding("key.loli.noUseDelay", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_U, "Loli"));
 		zoomKey = KeyBindingHelper.registerKeyBinding(
-				new KeyBinding("ass.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "AutumnVN's silly stuffs"));
+				new KeyBinding("key.loli.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "Loli"));
 
 		BlockRenderLayerMap.INSTANCE.putBlock(Blocks.BARRIER, RenderLayer.getTranslucent());
 		BlockRenderLayerMap.INSTANCE.putFluid(Fluids.LAVA, RenderLayer.getTranslucent());
 		BlockRenderLayerMap.INSTANCE.putFluid(Fluids.FLOWING_LAVA, RenderLayer.getTranslucent());
-		FabricLoader.getInstance().getModContainer("ass").ifPresent(container -> {
-			ResourceManagerHelper.registerBuiltinResourcePack(new Identifier("ass", "ass"), container,
+		FabricLoader.getInstance().getModContainer("loli").ifPresent(container -> {
+			ResourceManagerHelper.registerBuiltinResourcePack(new Identifier("loli", "loli"), container,
 					ResourcePackActivationType.DEFAULT_ENABLED);
 		});
 

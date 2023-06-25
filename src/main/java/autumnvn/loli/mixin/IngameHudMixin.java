@@ -1,4 +1,4 @@
-package autumnvn.ass.mixin;
+package autumnvn.loli.mixin;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.google.common.collect.Ordering;
 
-import autumnvn.ass.ASS;
+import autumnvn.loli.Loli;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -207,7 +207,7 @@ public class IngameHudMixin {
         lines.add(String.format("%d, %d, %d", client.player.getBlockPos().getX(), client.player.getBlockPos().getY(),
                 client.player.getBlockPos().getZ()));
         lines.add(String.format("%s %s", cap(direction.asString()), offset));
-        lines.add(String.format("%.1f tps", ASS.tps));
+        lines.add(String.format("%.1f tps", Loli.tps));
         if (!client.isInSingleplayer()
                 && client.getNetworkHandler().getPlayerListEntry(client.player.getUuid()) != null)
             lines.add(String.format("%dms",

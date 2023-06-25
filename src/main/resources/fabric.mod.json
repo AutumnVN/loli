@@ -1,26 +1,26 @@
 {
 	"schemaVersion": 1,
-	"id": "ass",
+	"id": "loli",
 	"version": "${version}",
-	"name": "AutumnVN's silly stuffs",
-	"description": "My silly fabric mod with a silly name",
+	"name": "Loli",
+	"description": "The cutest Minecraft client mod",
 	"authors": [
 		"AutumnVN"
 	],
 	"contact": {
 		"homepage": "https://chino.is-a.dev/",
-		"sources": "https://github.com/AutumnVN/ass"
+		"sources": "https://github.com/AutumnVN/loli"
 	},
 	"license": "MIT",
-	"icon": "assets/ass/icon.png",
+	"icon": "assets/loli/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"autumnvn.ass.ASS"
+			"autumnvn.loli.Loli"
 		]
 	},
 	"mixins": [
-		"ass.mixins.json"
+		"loli.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.14.21",

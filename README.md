@@ -1,12 +1,12 @@
-# [A]utumnVN's [s]illy [s]tuffs
+# [L]ots [o]f [L]ife [I]mprovements
 
-My silly fabric mod with a silly name. No config, everything is hardcoded.
+A client-side tweaks Fabric mod for QoL improvements.
 
-Client-side only.
+No config, everything is hardcoded.
 
-Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrinth.com/mod/fabric-api) and Minecraft 1.20
+Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrinth.com/mod/fabric-api) and Minecraft 1.20+
 
-## Features
+## Features (37)
 
 - 16kChatHistory
 

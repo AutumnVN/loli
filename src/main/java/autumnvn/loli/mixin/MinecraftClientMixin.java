@@ -1,4 +1,4 @@
-package autumnvn.ass.mixin;
+package autumnvn.loli.mixin;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import autumnvn.ass.ASS;
+import autumnvn.loli.Loli;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -24,7 +24,7 @@ public class MinecraftClientMixin {
     // NoUseDelay
     @Inject(method = "doItemUse", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;itemUseCooldown:I", ordinal = 0, shift = At.Shift.AFTER))
     private void onItemUseCooldown(CallbackInfo ci) {
-        itemUseCooldown = ASS.noUseDelay ? 1 : 4;
+        itemUseCooldown = Loli.noUseDelay ? 1 : 4;
     }
 
     @Shadow
