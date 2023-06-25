@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.ChatHud;
-import net.minecraft.client.gui.hud.MessageIndicator.Icon;
 
 @Mixin(ChatHud.class)
 public class ChatHudMixin {
@@ -31,13 +30,13 @@ public class ChatHudMixin {
     }
 
     @Inject(method = "drawIndicatorIcon", at = @At("HEAD"), cancellable = true)
-    private void onDrawIndicatorIcon(DrawContext matrices, int x, int y, Icon icon, CallbackInfo ci) {
+    private void onDrawIndicatorIcon(CallbackInfo ci) {
         ci.cancel();
     }
 
     // KeepChatHistory
     @Inject(method = "clear", at = @At("HEAD"), cancellable = true)
-    private void onClear(boolean clearHistory, CallbackInfo ci) {
+    private void onClear(CallbackInfo ci) {
         ci.cancel();
     }
 }

@@ -16,7 +16,7 @@ public class BarrierBlockMixin {
 
     // VisibleBarrier
     @Inject(method = "getRenderType", at = @At("HEAD"), cancellable = true)
-    public void onGetRenderType(BlockState state, CallbackInfoReturnable<BlockRenderType> cir) {
+    public void onGetRenderType(CallbackInfoReturnable<BlockRenderType> cir) {
         cir.setReturnValue(BlockRenderType.MODEL);
     }
 

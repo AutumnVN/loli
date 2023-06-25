@@ -24,10 +24,9 @@ public class ClientPlayerEntityMixin {
     private void onSetShowsDeathScreen(CallbackInfo ci) {
         if (Loli.died) {
             Loli.died = false;
-            client.player.sendMessage(
-                    Text.literal(
-                            "§6You died at §f" + Loli.deathX + " / " + Loli.deathY + " / " + Loli.deathZ + " §6in §f"
-                                    + Loli.deathWorld),
+            client.player.sendMessage(Text.literal(
+                    "§6You died at §f" + Loli.deathX + " / " + Loli.deathY + " / " + Loli.deathZ + " §6in §f"
+                            + Loli.deathWorld),
                     false);
         }
     }

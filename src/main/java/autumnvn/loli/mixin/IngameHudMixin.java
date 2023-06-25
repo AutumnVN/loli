@@ -79,10 +79,16 @@ public class IngameHudMixin {
         return null;
     }
 
+    @Shadow
+    private int scaledWidth;
+
+    @Shadow
+    private int scaledHeight;
+
     // StatusEffectTimer
     @Inject(method = "renderStatusEffectOverlay", at = @At("TAIL"))
     private void onRenderStatusEffectOverlay(DrawContext drawContext, CallbackInfo ci) {
-        Collection<StatusEffectInstance> collection = this.client.player.getStatusEffects();
+        Collection<StatusEffectInstance> collection = client.player.getStatusEffects();
         if (!collection.isEmpty()) {
             int beneficialCount = 0;
             int nonBeneficialCount = 0;
@@ -91,11 +97,8 @@ public class IngameHudMixin {
                 StatusEffect statusEffect = statusEffectInstance.getEffectType();
 
                 if (statusEffectInstance.shouldShowIcon()) {
-                    int x = this.client.getWindow().getScaledWidth();
+                    int x = scaledWidth;
                     int y = 1;
-
-                    if (this.client.isDemo())
-                        y += 15;
 
                     if (statusEffect.isBeneficial())
                         x -= 25 * ++beneficialCount;
@@ -126,12 +129,6 @@ public class IngameHudMixin {
     }
 
     @Shadow
-    private int scaledWidth;
-
-    @Shadow
-    private int scaledHeight;
-
-    @Shadow
     private void renderHotbarItem(DrawContext context, int x, int y, float f, PlayerEntity player, ItemStack stack,
             int seed) {
     }
@@ -140,7 +137,7 @@ public class IngameHudMixin {
     @Inject(method = "render", at = @At("HEAD"))
     private void onRenderArmorHud(DrawContext context, float tickDelta, CallbackInfo ci) {
         int x = 68;
-        int y = this.scaledHeight - 55;
+        int y = scaledHeight - 55;
 
         if (client.player.getAir() < client.player.getMaxAir())
             y -= 10;
@@ -159,7 +156,7 @@ public class IngameHudMixin {
         }
 
         for (int i = 0; i < 4; i++) {
-            renderHotbarItem(context, this.scaledWidth / 2 + x, y, tickDelta, client.player,
+            renderHotbarItem(context, scaledWidth / 2 + x, y, tickDelta, client.player,
                     client.player.getInventory().getArmorStack(i), 1);
             x -= 15;
         }

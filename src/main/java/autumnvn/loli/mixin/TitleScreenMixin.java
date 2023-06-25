@@ -20,7 +20,7 @@ public class TitleScreenMixin {
 
     // NoFade
     @Inject(method = "<init>(Z)V", at = @At("RETURN"))
-    private void onInit(boolean doBackgroundFade, CallbackInfo ci) {
-        this.doBackgroundFade = false;
+    private void onInit(CallbackInfo ci) {
+        doBackgroundFade = false;
     }
 }

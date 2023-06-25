@@ -45,7 +45,7 @@ public class MinecraftClientMixin {
 
         if (client.options.sprintKey.isPressed()) {
             tutorialManager.onInventoryOpened();
-            setScreen(new InventoryScreen(this.player));
+            setScreen(new InventoryScreen(player));
         } else {
             instance.openRidingInventory();
         }

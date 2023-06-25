@@ -15,7 +15,7 @@ public class BackgroundRendererMixin {
 
     // NoFog
     @Inject(method = "applyFog", at = @At("TAIL"))
-    private static void applyFog(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance,
+    private static void onApplyFog(Camera camera, BackgroundRenderer.FogType fogType, float viewDistance,
             boolean thickFog, float tickDelta, CallbackInfo ci) {
         if (fogType == BackgroundRenderer.FogType.FOG_TERRAIN) {
             RenderSystem.setShaderFogStart(Short.MAX_VALUE - 1);

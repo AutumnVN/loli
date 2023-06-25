@@ -24,11 +24,6 @@ import net.minecraft.util.Formatting;
 public class EntityRendererMixin<T extends Entity> {
 
 	@Shadow
-	protected boolean hasLabel(T entity) {
-		return false;
-	}
-
-	@Shadow
 	protected void renderLabelIfPresent(T entity, Text text, MatrixStack matrices,
 			VertexConsumerProvider vertexConsumers, int light) {
 	}
@@ -40,21 +35,19 @@ public class EntityRendererMixin<T extends Entity> {
 		if (entity instanceof LivingEntity) {
 			String entityName = entity.getName().getString();
 			int health = (int) Math.ceil(getHealth(entity));
-			entityName += "  " + getHealthColor(health) + health + Formatting.RED + " ❤";
+			entityName += " " + getHealthColor(health) + health + Formatting.RED + "❤";
 
 			if (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())
 				entityName += Formatting.RESET + " [C]";
 
 			if (entity instanceof HorseEntity) {
-				double speed = ((HorseEntity) entity).getAttributes()
-						.getValue(EntityAttributes.GENERIC_MOVEMENT_SPEED) * 42.157787584D;
+				double speed = ((HorseEntity) entity).getAttributes().getValue(EntityAttributes.GENERIC_MOVEMENT_SPEED)
+						* 42.157787584D;
 				double jumpStrength = ((HorseEntity) entity).getJumpStrength();
 				double jumpHeight = -0.1817584952D * jumpStrength * jumpStrength * jumpStrength
 						+ 3.689713992D * jumpStrength * jumpStrength + 2.128599134D * jumpStrength - 0.343930367D;
-				entityName += getHorseColor(4.742751103D, 14.228253309D, speed)
-						+ String.format("  %.1f ➡", speed)
-						+ getHorseColor(1.08623D, 5.29262D, jumpHeight)
-						+ String.format("  %.1f ⬆", jumpHeight);
+				entityName += getHorseColor(4.742751103D, 14.228253309D, speed) + String.format(" %.1f➡", speed)
+						+ getHorseColor(1.08623D, 5.29262D, jumpHeight) + String.format(" %.1f⬆", jumpHeight);
 			}
 
 			this.renderLabelIfPresent(entity, Text.of(entityName), matrices, vertexConsumers, light);
