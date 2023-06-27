@@ -1,0 +1,11 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "item/totem_of_undying"
+    },
+    "display": {
+        "fixed": {
+            "scale": [0, 0, 0]
+        }
+    }
+}

@@ -6,7 +6,7 @@ No config, everything is hardcoded.
 
 Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrinth.com/mod/fabric-api) and Minecraft 1.20+
 
-## Features (37)
+## Features (38)
 
 - 16kChatHistory
 
@@ -107,6 +107,10 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 - NoSubmersion
 
     - Remove annoying overlay when inside water, lava, powder snow
+
+- NoTotemPop
+
+    - Remove big totem pop that covers your whole screen
 
 - NoUseDelay
 
