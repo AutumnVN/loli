@@ -26,7 +26,6 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
 @Mixin(InGameHud.class)
@@ -186,24 +185,9 @@ public class IngameHudMixin {
 
         ArrayList<String> lines = new ArrayList<>();
 
-        Direction direction = client.player.getHorizontalFacing();
-
-        String offset = "";
-
-        if (direction.getOffsetX() > 0)
-            offset += "+X";
-        else if (direction.getOffsetX() < 0)
-            offset += "-X";
-
-        if (direction.getOffsetZ() > 0)
-            offset += "+Z";
-        else if (direction.getOffsetZ() < 0)
-            offset += "-Z";
-
         lines.add(String.format("%d fps", client.getCurrentFps()));
-        lines.add(String.format("%d, %d, %d", client.player.getBlockPos().getX(), client.player.getBlockPos().getY(),
-                client.player.getBlockPos().getZ()));
-        lines.add(String.format("%s %s", cap(direction.asString()), offset));
+        lines.add(String.format("%d, %d, %d [%s]", client.player.getBlockPos().getX(),
+                client.player.getBlockPos().getY(), client.player.getBlockPos().getZ(), getOffset()));
         lines.add(String.format("%.1f tps", Loli.tps));
         if (!client.isInSingleplayer()
                 && client.getNetworkHandler().getPlayerListEntry(client.player.getUuid()) != null)
@@ -216,9 +200,13 @@ public class IngameHudMixin {
         }
     }
 
-    private static String cap(String str) {
-        if (str == null)
-            return null;
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    private String getOffset() {
+        if (client.player.getHorizontalFacing().getOffsetX() > 0)
+            return "+X";
+        if (client.player.getHorizontalFacing().getOffsetX() < 0)
+            return "-X";
+        if (client.player.getHorizontalFacing().getOffsetZ() > 0)
+            return "+Z";
+        return "-Z";
     }
 }
