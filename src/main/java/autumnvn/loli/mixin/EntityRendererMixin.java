@@ -15,6 +15,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -32,7 +33,7 @@ public class EntityRendererMixin<T extends Entity> {
 	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
 	private void onRender(T entity, float yaw, float tickDelta, MatrixStack matrices,
 			VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-		if (entity instanceof LivingEntity) {
+		if (entity instanceof LivingEntity && !(entity instanceof ArmorStandEntity)) {
 			String entityName = entity.getName().getString();
 			int health = (int) Math.ceil(getHealth(entity));
 			entityName += " " + getHealthColor(health) + health + Formatting.RED + "❤";
