@@ -1,8 +1,8 @@
-# [L]ots [o]f [L]ife [I]mprovements
+# loli
 
-A client-side tweaks Fabric mod for QoL improvements.
+A client-side QoL Minecraft Fabric mod
 
-No config, everything is hardcoded.
+No config, everything is hardcoded :p
 
 Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrinth.com/mod/fabric-api) and Minecraft 1.20+
 
@@ -146,7 +146,7 @@ Requires [Fabric Loader](https://fabricmc.net/use/), [Fabric API](https://modrin
 
 - TriggerBot
 
-    - Press <kbd>R</kbd> to toggle, automatically attack entities in front of you. Ignored some unwanted passive mobs.
+    - Press <kbd>R</kbd> to toggle, automatically attack entities in front of you. Ignored some unwanted passive mobs
     - Press <kbd>P</kbd> to remove/add player entities from target list
 
 - VisibleBarrier
